@@ -7,7 +7,6 @@ use crate::{
     GenesisState, MsgUnjail, QueryParamsRequest, QueryParamsResponse, QuerySigningInfoRequest,
     QuerySigningInfoResponse, SlashingParamsKeeper, ValidatorSigningInfo,
 };
-use gears::extensions::gas::GasResultExt;
 use gears::{
     context::{
         block::BlockContext, init::InitContext, query::QueryContext, tx::TxContext,
@@ -31,7 +30,6 @@ use gears::{
     types::{
         address::{AccAddress, ConsAddress, ValAddress},
         decimal256::Decimal256,
-        store::gas::errors::GasStoreErrors,
     },
     x::{
         errors::AccountNotFound,
@@ -40,6 +38,7 @@ use gears::{
         types::{delegation::StakingDelegation, validator::StakingValidator},
     },
 };
+use gears::{extensions::gas::GasResultExt, gas::store::errors::GasStoreErrors};
 use std::marker::PhantomData;
 
 pub(crate) const VALIDATOR_SIGNING_INFO_KEY_PREFIX: [u8; 1] = [0x1];

@@ -14,7 +14,7 @@ use crate::types::tx::TxMessage;
 /// GetTxsEventResponse is the response type for the Service.TxsByEvents
 /// RPC method.
 #[serde_as]
-#[derive(Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetTxsEventResponse<M: TxMessage> {
     /// txs is the list of queried transactions.
     pub txs: Vec<Tx<M>>,

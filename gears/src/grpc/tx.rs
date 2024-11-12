@@ -8,6 +8,7 @@ use ibc_proto::cosmos::tx::v1beta1::{
 use tonic::{Request, Response, Status};
 use tracing::info;
 
+#[derive(Debug)]
 pub struct TxService;
 
 #[tonic::async_trait]

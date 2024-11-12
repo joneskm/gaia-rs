@@ -4,7 +4,6 @@ use super::{
 };
 use crate::error::POISONED_LOCK;
 use crate::params::ParamsSubspaceKey;
-use crate::types::gas::Gas;
 use crate::{application::handlers::node::ABCIHandler, context::init::InitContext};
 use crate::{
     application::ApplicationInfo,
@@ -14,6 +13,7 @@ use crate::{baseapp::RunTxInfo, context::block::BlockContext};
 use bytes::Bytes;
 use database::Database;
 use extensions::lock::AcquireRwLock;
+use gas::metering::Gas;
 use tendermint::{
     application::ABCIApplication,
     types::{

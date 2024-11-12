@@ -14,11 +14,11 @@ use crate::types::base::coins::UnsignedCoins;
 use crate::types::base::errors::CoinError;
 use crate::types::base::errors::CoinsError;
 
-use super::gas::{Gas, GasError};
+use gas::{Gas, GasError};
 
 pub mod inner {
-    pub use core_types::auth::fee::Fee;
-    pub use core_types::base::coin::Coin;
+    pub use core_types::auth::Fee;
+    pub use core_types::base::Coin;
 }
 
 /// Fee includes the amount of coins paid in fees and the maximum

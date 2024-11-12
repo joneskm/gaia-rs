@@ -232,8 +232,7 @@ impl From<ValidatorHistoricalRewards> for ValidatorHistoricalRewardsRaw {
 /// ReferenceCount =
 ///    number of outstanding delegations which ended the associated period (and
 ///    might need to read that record)
-///  + number of slashes which ended the associated period (and might need to
-///  read that record)
+///  + number of slashes which ended the associated period (and might need to read that record)
 ///  + one per validator for the zeroeth period, set on initialization
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 // TODO: add serde(try_from) to check coins during genesis

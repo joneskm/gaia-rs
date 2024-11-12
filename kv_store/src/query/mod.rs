@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, num::NonZero};
 
 use database::{prefix::PrefixDB, Database};
 use trees::iavl::QueryTree;
@@ -16,6 +16,8 @@ use super::store::kv::immutable::{KVStore, KVStoreBackend};
 
 pub mod kv;
 
+/// Creation options for query
+#[derive(Debug)]
 pub struct QueryStoreOptions<'a, DB, SK>(
     &'a HashMap<SK, ApplicationKVBank<PrefixDB<DB>>>,
     u32,
@@ -32,6 +34,7 @@ impl<'a, DB, SK> From<&'a ApplicationMultiBank<DB, SK>> for QueryStoreOptions<'a
     }
 }
 
+/// Query multi store which able to query only committed block
 #[derive(Debug)]
 pub struct QueryMultiStore<DB, SK> {
     pub(crate) head_version: u32,
@@ -40,9 +43,10 @@ pub struct QueryMultiStore<DB, SK> {
 }
 
 impl<DB: Database, SK: StoreKey> QueryMultiStore<DB, SK> {
+    /// Create new `self` with specified version or latest if not set
     pub fn new<'a>(
         opt: impl Into<QueryStoreOptions<'a, DB, SK>>,
-        version: u32,
+        version: Option<NonZero<u32>>,
     ) -> Result<Self, KVStoreError>
     where
         DB: 'a,

@@ -57,7 +57,7 @@ pub fn expand_store(input: DeriveInput) -> syn::Result<TokenStream> {
                 {
                     Err(syn::Error::new(
                         ident.span(),
-                        format!("Key: {} is prefix of another item: {}", to_string, prefix),
+                        format!("Key: {to_string} is prefix of another item: {prefix}"),
                     ))?
                 }
 

@@ -3,6 +3,9 @@ edition = "2021"
 name = "evidence"
 version = "0.1.0"
 
+[lints]
+workspace = true
+
 [dependencies]
 anyhow = { workspace = true }
 bytes = { workspace = true }

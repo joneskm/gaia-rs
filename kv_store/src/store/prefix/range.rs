@@ -1,8 +1,14 @@
-use std::{borrow::Cow, ops::RangeBounds};
+use std::{
+    borrow::Cow,
+    ops::{Bound, RangeBounds},
+};
 
 use database::Database;
 
 use crate::range::Range;
+
+pub type VectoredPrefixRange<'a, DB> =
+    PrefixRange<'a, DB, Vec<u8>, (Bound<Vec<u8>>, Bound<Vec<u8>>)>;
 
 #[derive(Debug, Clone)]
 pub struct PrefixRange<'a, DB, RB, R> {

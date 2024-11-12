@@ -10,6 +10,7 @@ use crate::{
 /// A Gears client application.
 pub trait Client: TxHandler + QueryHandler + AuxHandler {}
 
+#[derive(Debug)]
 pub struct ClientApplication<Core: Client, F: NodeFetcher + Clone> {
     core: Core,
     fetcher: F,

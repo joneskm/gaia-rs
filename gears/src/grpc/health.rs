@@ -9,6 +9,7 @@ use ibc_proto::cosmos::base::tendermint::v1beta1::{
 use tonic::{Request, Response, Status};
 use tracing::info;
 
+#[derive(Debug)]
 pub struct GearsHealthService;
 
 #[tonic::async_trait]

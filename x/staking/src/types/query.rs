@@ -225,7 +225,7 @@ impl TryFrom<inner::QueryRedelegationsRequest> for QueryRedelegationsRequest {
     }
 }
 
-#[derive(Clone, PartialEq, Query, Protobuf)]
+#[derive(Clone, Debug, PartialEq, Query, Protobuf)]
 #[query(url = "/cosmos.staking.v1beta1.Query/DelegatorValidators")]
 #[proto(raw = "inner::QueryDelegatorValidatorsRequest")]
 pub struct QueryDelegatorValidatorsRequest {
@@ -234,19 +234,19 @@ pub struct QueryDelegatorValidatorsRequest {
     pub pagination: Option<PaginationRequest>,
 }
 
-#[derive(Clone, PartialEq, Query, Protobuf)]
+#[derive(Clone, Debug, PartialEq, Query, Protobuf)]
 #[query(url = "/cosmos.staking.v1beta1.Query/HistoricalInfo")]
 #[proto(raw = "inner::QueryHistoricalInfoRequest")]
 pub struct QueryHistoricalInfoRequest {
     pub height: i64,
 }
 
-#[derive(Clone, PartialEq, Query, Protobuf)]
+#[derive(Clone, Debug, PartialEq, Query, Protobuf)]
 #[query(url = "/cosmos.staking.v1beta1.Query/Pool")]
 #[proto(raw = "inner::QueryPoolRequest")]
 pub struct QueryPoolRequest {}
 
-#[derive(Clone, PartialEq, Query, Protobuf)]
+#[derive(Clone, Debug, PartialEq, Query, Protobuf)]
 #[query(url = "/cosmos.staking.v1beta1.Query/Params")]
 #[proto(raw = "inner::QueryParamsRequest")]
 pub struct QueryParamsRequest {}

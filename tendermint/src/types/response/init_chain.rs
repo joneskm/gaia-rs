@@ -1,6 +1,6 @@
 use crate::types::proto::{consensus::ConsensusParams, validator::ValidatorUpdate};
 
-#[derive(Clone, PartialEq, Eq, Default, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Default, serde::Serialize, serde::Deserialize)]
 pub struct ResponseInitChain {
     pub consensus_params: Option<ConsensusParams>,
     pub validators: Vec<ValidatorUpdate>,

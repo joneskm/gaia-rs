@@ -34,7 +34,7 @@ impl From<std::convert::Infallible> for CoreError {
 
 impl From<CoreError> for tonic::Status {
     fn from(e: CoreError) -> Self {
-        tonic::Status::invalid_argument(format!("{:?}", e))
+        tonic::Status::invalid_argument(format!("{e:?}"))
     }
 }
 

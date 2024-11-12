@@ -164,7 +164,7 @@ impl QueryHandler for DistributionQueryHandler {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum DistributionQueryRequest {
     ValidatorOutstandingRewards(QueryValidatorOutstandingRewardsRequest),
     ValidatorCommission(QueryValidatorCommissionRequest),

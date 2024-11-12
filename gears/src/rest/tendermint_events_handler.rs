@@ -1,6 +1,7 @@
 // TODO: update errors
 use anyhow::anyhow;
 
+#[derive(Debug)]
 pub struct StrEventsHandler<'a> {
     events_str: &'a str,
 }

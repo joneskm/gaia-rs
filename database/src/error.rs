@@ -1,3 +1,6 @@
+//! Errors
+#![allow(missing_docs)]
+
 #[cfg(any(feature = "rocksdb", feature = "sled"))]
 pub use self::inner::*;
 
@@ -5,6 +8,7 @@ pub use self::inner::*;
 mod inner {
     use thiserror::Error;
 
+    /// Database related errors
     #[derive(Error, Debug, PartialEq, Eq)]
     pub enum DatabaseError {
         #[cfg(feature = "rocksdb")]

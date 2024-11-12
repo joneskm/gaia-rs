@@ -11,8 +11,8 @@ use crate::types::{
 };
 
 mod inner {
-    pub use core_types::auth::tip::Tip;
-    pub use core_types::base::coin::Coin;
+    pub use core_types::auth::Tip;
+    pub use core_types::base::Coin;
 }
 
 // Tip is the tip used for meta-transactions.

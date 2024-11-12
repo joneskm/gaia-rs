@@ -1,4 +1,4 @@
-use std::ops::RangeBounds;
+use std::{num::NonZero, ops::RangeBounds};
 
 use database::Database;
 
@@ -15,10 +15,11 @@ pub struct QueryTree<DB> {
 }
 
 impl<DB: Database> QueryTree<DB> {
-    pub fn new(tree: &Tree<DB>, mut version: u32) -> Result<Self, Error> {
-        if version == 0 {
-            version = tree.loaded_version;
-        }
+    /// Create new `Self` with specific version.
+    pub fn new(tree: &Tree<DB>, version: Option<NonZero<u32>>) -> Result<Self, Error> {
+        let version = version
+            .map(|this| this.get())
+            .unwrap_or(tree.loaded_version);
 
         if tree.versions.contains(&version) {
             let root = tree.node_db.get_root_node(version).expect(
@@ -36,6 +37,7 @@ impl<DB: Database> QueryTree<DB> {
 }
 
 impl<DB: Database> QueryTree<DB> {
+    /// Return value of key
     pub fn get(&self, key: &[u8]) -> Option<Vec<u8>> {
         match &self.root {
             Some(root) => self.get_(key, root),
@@ -90,6 +92,7 @@ impl<DB: Database> QueryTree<DB> {
         }
     }
 
+    /// Return range iterator
     pub fn range<R: RangeBounds<RB>, RB: AsRef<[u8]>>(&self, range: R) -> Range<'_, DB, RB, R> {
         match &self.root {
             Some(root) => Range::new(
@@ -116,7 +119,7 @@ mod tests {
         tree.save_version().unwrap_test();
         tree.set(b"alice".to_vec(), b"123".to_vec());
 
-        let query_tree = QueryTree::new(&tree, 1).unwrap_test();
+        let query_tree = QueryTree::new(&tree, Some(nz::u32!(1))).unwrap_test();
         let result = query_tree.get(b"alice".as_slice()).unwrap_test();
 
         let expected = b"abc".to_vec();
@@ -133,7 +136,7 @@ mod tests {
         let mut tree = Tree::new(db, None, 100.try_into().unwrap_test(), None).unwrap_test();
         tree.save_version().unwrap_test();
 
-        let query_tree = QueryTree::new(&tree, 1).unwrap_test();
+        let query_tree = QueryTree::new(&tree, Some(nz::u32!(1))).unwrap_test();
         let result = query_tree.get(b"alice".as_slice());
 
         let expected = None;

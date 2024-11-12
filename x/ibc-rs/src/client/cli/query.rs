@@ -24,7 +24,7 @@ pub enum IbcQueryCommands {
     Client(ClientQueryCli),
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum IbcQuery {
     Client(ClientQuery),
 }

@@ -1,10 +1,10 @@
 use gears::{
     application::handlers::node::TxError,
     error::NumericError,
+    gas::store::errors::GasStoreErrors,
     types::{
         address::{ConsAddress, ValAddress},
         decimal256::{Decimal256, Decimal256RangeExceeded},
-        store::gas::errors::GasStoreErrors,
         uint::Uint256,
     },
     x::errors::AccountNotFound,

@@ -2,6 +2,7 @@ use std::{
     cmp::{self, Ordering},
     collections::BTreeSet,
     mem,
+    num::NonZero,
 };
 
 use database::Database;
@@ -507,6 +508,9 @@ impl Node {
     }
 }
 
+/// IAVL tree which responsible for producing state hash, search of keys and storing data until commit is called.
+///
+/// Tree should be loaded at specific version or use latest one
 // TODO: rename loaded_version to head_version introduce a working_version (+ remove redundant loaded_version?). this will allow the first committed version to be version 0 rather than 1 (there is no version 0 currently!)
 #[derive(Debug)]
 pub struct Tree<T> {
@@ -524,9 +528,10 @@ impl<T> Tree<T>
 where
     T: Database,
 {
+    /// Create new `self`
     pub fn new(
         db: T,
-        target_version: Option<u32>,
+        target_version: Option<NonZero<u32>>,
         cache_size: CacheSize,
         name: Option<String>,
     ) -> Result<Tree<T>, Error> {
@@ -534,11 +539,11 @@ where
         let versions = node_db.get_versions();
 
         if let Some(target_version) = target_version {
-            let root = node_db.get_root_node(target_version)?;
+            let root = node_db.get_root_node(target_version.get())?;
 
             Ok(Tree {
                 root,
-                loaded_version: target_version,
+                loaded_version: target_version.get(),
                 node_db,
                 versions,
                 _name: name,
@@ -611,6 +616,7 @@ where
         Ok((root_hash, self.loaded_version))
     }
 
+    /// Return hash of root
     pub fn root_hash(&self) -> [u8; 32] {
         match &self.root {
             Some(root) => root.hash(),
@@ -618,10 +624,12 @@ where
         }
     }
 
+    /// Return root version
     pub fn loaded_version(&self) -> u32 {
         self.loaded_version
     }
 
+    /// Return value of key
     pub fn get(&self, key: &[u8]) -> Option<Vec<u8>> {
         match &self.root {
             Some(root) => self.get_(key, root),
@@ -675,6 +683,7 @@ where
         }
     }
 
+    /// Remove key from tree
     pub fn remove(&mut self, key: &(impl AsRef<[u8]> + ?Sized)) -> Option<Vec<u8>> {
         // We use this struct to be 100% sure in output of `recursive_remove`
         struct NodeKey(pub Vec<u8>);
@@ -825,6 +834,7 @@ where
         }
     }
 
+    /// Set(with overwrite) key with value
     pub fn set(&mut self, key: Vec<u8>, value: Vec<u8>) {
         match &mut self.root {
             Some(root) => {
@@ -950,6 +960,7 @@ where
         }
     }
 
+    /// Return range iterator over tree
     pub fn range<R, RB>(&self, range: R) -> Range<'_, T, RB, R> {
         match &self.root {
             Some(root) => Range::new(

@@ -8,7 +8,6 @@ pub mod base;
 pub mod decimal256;
 pub mod denom;
 pub mod errors;
-pub mod gas;
 pub mod msg;
 pub mod pagination;
 pub mod rendering;

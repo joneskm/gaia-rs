@@ -1,6 +1,6 @@
 use extensions::{gas::UnwrapGasError, pagination::PaginationKey};
 
-use crate::types::{auth::gas::GasError, gas::GasMeteringErrors};
+use crate::{metering::GasMeteringErrors, GasError};
 
 // TODO: this error should have two variants, out of gas and gas overflow
 #[derive(Debug, Clone, Eq, PartialEq, thiserror::Error)]

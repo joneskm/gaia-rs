@@ -2,9 +2,10 @@ use std::{marker::PhantomData, ops::Bound};
 
 use chrono::{DateTime, Utc};
 use gears::{
+    gas::store::errors::GasStoreErrors,
     store::database::Database,
     tendermint::types::time::timestamp::Timestamp,
-    types::store::{gas::errors::GasStoreErrors, kv::Store, range::StoreRange},
+    types::store::{kv::Store, range::VectoredStoreRange},
 };
 use serde::de::DeserializeOwned;
 
@@ -13,10 +14,7 @@ use crate::{errors::SERDE_JSON_CONVERSION, proposal::Proposal};
 use super::{parse_proposal_key_bytes, ProposalModel};
 
 #[derive(Debug)]
-pub struct ActiveProposalIterator<'a, DB, P>(
-    StoreRange<'a, DB, Vec<u8>, (Bound<Vec<u8>>, Bound<Vec<u8>>)>,
-    PhantomData<P>,
-);
+pub struct ActiveProposalIterator<'a, DB, P>(VectoredStoreRange<'a, DB>, PhantomData<P>);
 
 impl<'a, DB: Database, P: Proposal> ActiveProposalIterator<'a, DB, P> {
     pub fn new(store: Store<'a, DB>, end_time: &Timestamp) -> ActiveProposalIterator<'a, DB, P> {

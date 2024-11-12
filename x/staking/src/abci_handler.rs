@@ -56,7 +56,7 @@ pub struct StakingABCIHandler<
     phantom_data: std::marker::PhantomData<MI>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum StakingNodeQueryRequest {
     Validator(QueryValidatorRequest),
     Validators(QueryValidatorsRequest),
@@ -80,7 +80,7 @@ impl QueryRequest for StakingNodeQueryRequest {
     }
 }
 
-#[derive(Clone, Serialize, Query)]
+#[derive(Clone, Debug, Serialize, Query)]
 #[serde(untagged)]
 #[allow(clippy::large_enum_variant)]
 pub enum StakingNodeQueryResponse {

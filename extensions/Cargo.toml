@@ -3,9 +3,9 @@ name = "extensions"
 version = "0.1.0"
 edition = "2021"
 
+[lints]
+workspace = true
+
 [dependencies]
 vec1 = { workspace = true }
 itertools = { workspace = true }
-
-[lints]
-workspace = true

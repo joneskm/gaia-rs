@@ -34,7 +34,7 @@ pub async fn validator<
     Ok(Json(res))
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct ValidatorsQuery {
     status: Option<BondStatus>,
     // TODO: serde(flatten) doesn't work

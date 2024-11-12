@@ -9,8 +9,13 @@ use gears::{
 };
 use staking::{Keeper, MockHookKeeper, StakingABCIHandler};
 
+/// cosmos1syavy2npfyt9tcncdtsdzf7kny9lh777pahuux
 #[allow(dead_code)]
 pub const USER_0 : &str = "race draft rival universe maid cheese steel logic crowd fork comic easy truth drift tomorrow eye buddy head time cash swing swift midnight borrow";
+
+/// cosmos15qzm75pjh0jqsv3u40hzp2vzs2hdp47fkz7j5q
+#[allow(dead_code)]
+pub const USER_1: &str = "unfair live spike near cushion blanket club salad poet cigar venue above north speak harbor salute curve tail appear obvious month end boss priority";
 
 #[allow(dead_code)]
 pub const CONSENSUS_KEY: &str = r#"{ "type": "tendermint/PubKeyEd25519", "value": "JVWozgDG2S0TOEE0oFWz/EnSxA0EtYhXQANVIZpePFs="} "#;

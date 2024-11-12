@@ -1,9 +1,13 @@
-use std::ops::{Bound, RangeBounds};
+use std::ops::RangeBounds;
 
 use database::Database;
 use kv_store::store::prefix::immutable::ImmutablePrefixStore;
 
-use super::{errors::GasStoreErrors, guard::GasGuard, range::GasRange};
+use super::{
+    errors::GasStoreErrors,
+    guard::GasGuard,
+    range::{GasRange, VectoredGasRange},
+};
 
 pub mod mutable;
 
@@ -34,10 +38,7 @@ impl<DB: Database> GasPrefixStore<'_, DB> {
 }
 
 impl<'a, DB: Database> GasPrefixStore<'a, DB> {
-    pub fn into_range<R: RangeBounds<Vec<u8>> + Clone>(
-        self,
-        range: R,
-    ) -> GasRange<'a, DB, Vec<u8>, (Bound<Vec<u8>>, Bound<Vec<u8>>)> {
+    pub fn into_range<R: RangeBounds<Vec<u8>> + Clone>(self, range: R) -> VectoredGasRange<'a, DB> {
         GasRange::new_prefix(self.inner.into_range(range), self.guard.clone())
     }
 }

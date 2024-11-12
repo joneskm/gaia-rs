@@ -1,6 +1,6 @@
 use crate::types::proto::{consensus::ConsensusParams, event::Event, validator::ValidatorUpdate};
 
-#[derive(Clone, PartialEq, Eq, Default, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Default, serde::Serialize, serde::Deserialize)]
 pub struct ResponseEndBlock {
     pub validator_updates: Vec<ValidatorUpdate>,
     pub consensus_param_updates: Option<ConsensusParams>,

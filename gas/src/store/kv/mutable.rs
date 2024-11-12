@@ -3,7 +3,7 @@ use std::ops::RangeBounds;
 use database::Database;
 use kv_store::store::kv::mutable::KVStoreMut;
 
-use crate::types::store::gas::{
+use crate::store::{
     errors::GasStoreErrors,
     guard::GasGuard,
     prefix::{mutable::GasPrefixStoreMut, GasPrefixStore},
@@ -19,7 +19,7 @@ pub struct GasKVStoreMut<'a, DB> {
 }
 
 impl<'a, DB: Database> GasKVStoreMut<'a, DB> {
-    pub(crate) fn new(guard: GasGuard, inner: KVStoreMut<'a, DB>) -> Self {
+    pub fn new(guard: GasGuard, inner: KVStoreMut<'a, DB>) -> Self {
         Self { guard, inner }
     }
 

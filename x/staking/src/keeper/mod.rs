@@ -12,6 +12,7 @@ use gears::{
         QueryableContext, TransactionalContext,
     },
     extensions::gas::GasResultExt,
+    gas::store::errors::GasStoreErrors,
     params::ParamsSubspaceKey,
     store::{database::Database, StoreKey},
     tendermint::types::{
@@ -25,7 +26,6 @@ use gears::{
         address::{AccAddress, ValAddress},
         base::{coin::UnsignedCoin, coins::UnsignedCoins},
         decimal256::Decimal256,
-        store::gas::errors::GasStoreErrors,
         uint::Uint256,
     },
     x::{
@@ -395,6 +395,7 @@ impl<
     /// * Updates validator status' according to updated powers.
     /// * Updates the fee pool bonded vs not-bonded tokens.
     /// * Updates relevant indices.
+    ///
     /// It gets called once after genesis, another time maybe after genesis transactions,
     /// then once at every EndBlock.
     ///

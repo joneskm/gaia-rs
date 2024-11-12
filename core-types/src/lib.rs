@@ -1,14 +1,17 @@
+//! TODO
+#![allow(missing_docs)]
+
 pub mod account;
 pub mod any;
-pub mod auth;
-pub mod bank;
-pub mod base;
 pub mod errors;
-pub mod msg;
 pub mod query;
 pub mod serializers;
 pub mod signing;
 pub mod tx;
+
+mod types;
+
+pub use crate::types::*;
 
 // Let's call this compatibility
 pub use ibc_proto::protobuf::Protobuf;

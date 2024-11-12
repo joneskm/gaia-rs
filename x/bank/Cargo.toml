@@ -3,6 +3,9 @@ name = "bank"
 version = "0.1.0"
 edition = "2021"
 
+[lints]
+workspace = true
+
 [dependencies]
 #local
 gears = { path = "../../gears", features = ["cli", "xmods", "governance"] }

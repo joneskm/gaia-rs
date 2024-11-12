@@ -5,7 +5,7 @@ use ibc_rs::client::cli::query::{IbcQuery, IbcQueryResponse};
 use serde::{Deserialize, Serialize};
 use staking::cli::query::{StakingQuery, StakingQueryResponse};
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum GaiaQuery {
     Auth(AuthQuery),
     Bank(BankQuery),

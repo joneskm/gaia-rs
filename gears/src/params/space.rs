@@ -3,6 +3,7 @@ use kv_store::store::prefix::immutable::ImmutablePrefixStore;
 
 use super::{parsed::Params, ParamKind, ParamsDeserialize};
 
+#[derive(Debug)]
 pub struct ParamsSpace<'a, DB> {
     pub(super) inner: ImmutablePrefixStore<'a, DB>,
 }

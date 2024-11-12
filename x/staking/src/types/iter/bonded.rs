@@ -1,10 +1,7 @@
 use crate::{consts::keeper::VALIDATORS_KEY, Validator};
 use gears::{
-    core::Protobuf,
-    extensions::corruption::UnwrapCorrupt,
-    store::database::Database,
-    types::store::{gas::errors::GasStoreErrors, kv::Store},
-    x::types::validator::BondStatus,
+    core::Protobuf, extensions::corruption::UnwrapCorrupt, gas::store::errors::GasStoreErrors,
+    store::database::Database, types::store::kv::Store, x::types::validator::BondStatus,
 };
 
 #[derive(Debug)]

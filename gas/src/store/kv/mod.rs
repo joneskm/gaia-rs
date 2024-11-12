@@ -14,7 +14,7 @@ pub struct GasKVStore<'a, DB> {
 }
 
 impl<'a, DB: Database> GasKVStore<'a, DB> {
-    pub(crate) fn new(guard: GasGuard, inner: KVStore<'a, DB>) -> Self {
+    pub fn new(guard: GasGuard, inner: KVStore<'a, DB>) -> Self {
         Self { guard, inner }
     }
 

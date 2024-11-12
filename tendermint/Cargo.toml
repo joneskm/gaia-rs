@@ -3,6 +3,9 @@ name = "tendermint"
 version = "0.1.0"
 edition = "2021"
 
+[lints]
+workspace = true
+
 # It's not clear what version of the Tendermint API each version of tendermint-abci implements
 # this line suggests that v0.28.0 implements Tendermint API v0.34.x
 # https://github.com/informalsystems/tendermint-rs/blob/560c852840ac58cb03b55fc376ff0dc2ac089d94/abci/src/codec.rs#L5

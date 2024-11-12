@@ -5,6 +5,7 @@ use trees::iavl::QueryTree;
 
 use crate::store::prefix::immutable::ImmutablePrefixStore;
 
+/// Key value store for query
 #[derive(Debug)]
 pub struct QueryKVStore<DB>(QueryTree<DB>);
 

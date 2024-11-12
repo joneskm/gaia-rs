@@ -6,6 +6,7 @@ use std::{
 
 use crate::Database;
 
+/// Database which stores data in memory
 #[derive(Debug, Clone)]
 pub struct MemDB {
     store: Arc<RwLock<BTreeMap<Vec<u8>, Vec<u8>>>>,
@@ -18,6 +19,7 @@ impl Default for MemDB {
 }
 
 impl MemDB {
+    /// Create new `Self`
     pub fn new() -> MemDB {
         MemDB {
             store: Arc::new(RwLock::new(BTreeMap::new())),
@@ -37,7 +39,7 @@ impl Database for MemDB {
             .insert(key, value);
     }
 
-    fn iterator<'a>(&'a self) -> impl Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a {
+    fn iterator(&self) -> impl Iterator<Item = (Box<[u8]>, Box<[u8]>)> + '_ {
         self.store
             .read()
             .expect("poisoned lock")
@@ -46,10 +48,10 @@ impl Database for MemDB {
             .map(|(key, value)| (key.into_boxed_slice(), value.into_boxed_slice()))
     }
 
-    fn prefix_iterator<'a>(
-        &'a self,
+    fn prefix_iterator(
+        &self,
         prefix: Vec<u8>,
-    ) -> impl Iterator<Item = (Box<[u8]>, Box<[u8]>)> + 'a {
+    ) -> impl Iterator<Item = (Box<[u8]>, Box<[u8]>)> + '_ {
         let start = Bound::Included(prefix.clone());
         let end = prefix_end_bound(prefix);
 

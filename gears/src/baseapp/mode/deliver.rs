@@ -1,12 +1,11 @@
 use database::Database;
+use gas::metering::{
+    basic_meter::BasicGasMeter, infinite_meter::InfiniteGasMeter, kind::BlockKind, Gas, GasMeter,
+};
 use kv_store::bank::multi::TransactionMultiBank;
 use tendermint::types::proto::event::Event;
 
 use super::ExecutionMode;
-use crate::types::gas::basic_meter::BasicGasMeter;
-use crate::types::gas::infinite_meter::InfiniteGasMeter;
-use crate::types::gas::kind::BlockKind;
-use crate::types::gas::{Gas, GasMeter};
 use crate::{
     application::handlers::node::ABCIHandler,
     baseapp::errors::RunTxError,
@@ -14,6 +13,14 @@ use crate::{
     types::tx::raw::TxWithRaw,
 };
 
+/// Specific to `deliver_tx` ABCI method.
+///
+/// Mode to execute transactions. This mode still run
+/// ante checks, but you may skip execution by checking
+/// `bool` flag in ante method. Futhermore this module
+/// state used during {begin/end}_block meaning state
+/// would be taken/drained and committed
+/// with application store layer.
 #[derive(Debug)]
 pub struct DeliverTxMode<DB, AH: ABCIHandler> {
     pub(crate) block_gas_meter: GasMeter<BlockKind>,

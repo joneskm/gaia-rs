@@ -39,7 +39,7 @@ pub struct AccountsCommand {
     pub pagination: Option<CliPaginationRequest>,
 }
 
-#[derive(Clone, PartialEq, Query)]
+#[derive(Clone, Debug, PartialEq, Query)]
 #[query(request)]
 pub enum AuthQuery {
     Account(QueryAccountRequest),

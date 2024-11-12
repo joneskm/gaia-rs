@@ -59,11 +59,6 @@ pub trait ParamsSubspaceKey: std::fmt::Debug + Hash + Eq + Clone + Send + Sync +
     fn from_subspace_str(val: impl AsRef<str>) -> Result<Self, SubspaceParseError>;
 }
 
-// TODO:LATER For PR with xmod to change any params
-// pub trait ModuleParams {
-//     fn module_params<PSK: ParamsSubspaceKey, P: Params>() -> (PSK, P);
-// }
-
 pub trait ParamsSerialize {
     /// Return all unique keys for this structure
     fn keys() -> HashSet<&'static str>;

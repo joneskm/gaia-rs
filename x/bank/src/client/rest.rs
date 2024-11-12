@@ -84,7 +84,7 @@ pub async fn get_balances<
     Ok(Json(res))
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct QueryData {
     denom: Denom,
 }

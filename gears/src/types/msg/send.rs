@@ -8,7 +8,7 @@ use crate::types::{
 };
 
 mod inner {
-    pub use core_types::base::coin::Coin;
+    pub use core_types::base::Coin;
     pub use core_types::msg::MsgSend;
 }
 

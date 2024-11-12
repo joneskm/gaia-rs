@@ -4,7 +4,10 @@ use database::Database;
 
 use crate::store::kv::immutable::KVStore;
 
-use super::{prefix_end_bound, range::PrefixRange};
+use super::{
+    prefix_end_bound,
+    range::{PrefixRange, VectoredPrefixRange},
+};
 
 #[derive(Debug, Clone)]
 pub struct ImmutablePrefixStore<'a, DB> {
@@ -16,7 +19,7 @@ impl<'a, DB: Database> ImmutablePrefixStore<'a, DB> {
     pub fn into_range<R: RangeBounds<Vec<u8>> + Clone>(
         self,
         range: R,
-    ) -> PrefixRange<'a, DB, Vec<u8>, (Bound<Vec<u8>>, Bound<Vec<u8>>)> {
+    ) -> VectoredPrefixRange<'a, DB> {
         let new_start = match range.start_bound() {
             Bound::Included(b) => Bound::Included([self.prefix.clone(), b.clone()].concat()),
             Bound::Excluded(b) => Bound::Excluded([self.prefix.clone(), b.clone()].concat()),

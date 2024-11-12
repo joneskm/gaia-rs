@@ -1,6 +1,7 @@
 use gears::{
     application::handlers::node::{ModuleInfo, TxError},
-    types::{base::errors::CoinsError, store::gas::errors::GasStoreErrors},
+    gas::store::errors::GasStoreErrors,
+    types::base::errors::CoinsError,
     x::errors::BankKeeperError,
 };
 

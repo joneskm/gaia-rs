@@ -1,8 +1,8 @@
 use gears::context::InfallibleContextMut;
 use gears::core::errors::CoreError;
+use gears::gas::store::errors::GasStoreErrors;
 use gears::store::database::Database;
 use gears::store::StoreKey;
-use gears::types::store::gas::errors::GasStoreErrors;
 
 pub trait ProposalHandler<P, SK: StoreKey> {
     fn handle<CTX: InfallibleContextMut<DB, SK>, DB: Database>(

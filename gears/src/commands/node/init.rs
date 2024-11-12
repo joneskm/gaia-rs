@@ -12,6 +12,7 @@ pub struct InitCommand {
     pub chain_id: ChainId,
 }
 
+/// Init application configuration like `tendermint` config, genesis file
 pub fn init<G: Serialize, AC: ApplicationConfig>(
     cmd: InitCommand,
     app_genesis_state: &G,

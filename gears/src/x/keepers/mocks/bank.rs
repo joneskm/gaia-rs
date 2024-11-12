@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use address::AccAddress;
+use gas::store::errors::GasStoreErrors;
 use kv_store::StoreKey;
 
 use crate::{
@@ -8,7 +9,6 @@ use crate::{
     types::{
         base::{coin::UnsignedCoin, coins::UnsignedCoins},
         denom::Denom,
-        store::gas::errors::GasStoreErrors,
         tx::metadata::Metadata,
     },
     x::{

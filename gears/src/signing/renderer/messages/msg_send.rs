@@ -15,31 +15,29 @@ impl ValueRenderer for MsgSend {
     /// Format `MsgSend`
     /// Note: This implementation doesn't include `Screen` with information about beginning of message and name
     fn format<MG: MetadataGetter>(&self, get_metadata: &MG) -> Result<Vec<Screen>, RenderError> {
-        let mut screens_vec = Vec::new();
-
-        screens_vec.push(Screen {
-            title: "From address".to_string(),
-            content: DefaultPrimitiveRenderer::format(self.from_address.clone()),
-            indent: Some(Indent::two()),
-            expert: false,
-        });
-
-        screens_vec.push(Screen {
-            title: "To address".to_string(),
-            content: DefaultPrimitiveRenderer::format(self.to_address.clone()),
-            indent: Some(Indent::two()),
-            expert: false,
-        });
-
-        screens_vec.push(Screen {
-            title: "Amount".to_string(),
-            content: DefaultPrimitiveRenderer::try_format_with_metadata(
-                self.amount.to_owned(),
-                get_metadata,
-            )?,
-            indent: Some(Indent::two()),
-            expert: false,
-        });
+        let screens_vec = vec![
+            Screen {
+                title: "From address".to_string(),
+                content: DefaultPrimitiveRenderer::format(self.from_address.clone()),
+                indent: Some(Indent::two()),
+                expert: false,
+            },
+            Screen {
+                title: "To address".to_string(),
+                content: DefaultPrimitiveRenderer::format(self.to_address.clone()),
+                indent: Some(Indent::two()),
+                expert: false,
+            },
+            Screen {
+                title: "Amount".to_string(),
+                content: DefaultPrimitiveRenderer::try_format_with_metadata(
+                    self.amount.to_owned(),
+                    get_metadata,
+                )?,
+                indent: Some(Indent::two()),
+                expert: false,
+            },
+        ];
 
         Ok(screens_vec)
     }

@@ -1,4 +1,4 @@
-#[derive(Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct ResponseInfo {
     #[serde(default)]
     pub data: String,

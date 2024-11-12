@@ -1,14 +1,15 @@
-use std::{marker::PhantomData, ops::Bound, str::FromStr, sync::OnceLock};
+use std::{marker::PhantomData, str::FromStr, sync::OnceLock};
 
 use chrono::{DateTime, SubsecRound, Utc};
 use gears::{
     core::{errors::CoreError, Protobuf},
     error::ProtobufError,
+    gas::store::errors::GasStoreErrors,
     store::database::Database,
     tendermint::types::time::timestamp::Timestamp,
     types::{
         base::coins::UnsignedCoins,
-        store::{gas::errors::GasStoreErrors, kv::Store, range::StoreRange},
+        store::{kv::Store, range::VectoredStoreRange},
         uint::Uint256,
     },
 };
@@ -310,10 +311,7 @@ fn parse_proposal_key_bytes(bytes: impl AsRef<[u8]>) -> (u64, DateTime<Utc>) {
 }
 
 #[derive(Debug)]
-pub struct ProposalsIterator<'a, DB, P>(
-    StoreRange<'a, DB, Vec<u8>, (Bound<Vec<u8>>, Bound<Vec<u8>>)>,
-    PhantomData<P>,
-);
+pub struct ProposalsIterator<'a, DB, P>(VectoredStoreRange<'a, DB>, PhantomData<P>);
 
 impl<'a, DB: Database, P: Proposal> ProposalsIterator<'a, DB, P> {
     pub fn new(store: Store<'a, DB>) -> ProposalsIterator<'a, DB, P> {

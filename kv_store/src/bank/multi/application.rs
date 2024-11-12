@@ -1,3 +1,5 @@
+//! Application kind of multi store
+
 use std::{collections::HashMap, sync::Arc};
 
 use database::{prefix::PrefixDB, Database};
@@ -9,6 +11,7 @@ use crate::{
 
 use super::*;
 
+/// Backend for application multi store
 #[derive(Debug)]
 pub struct ApplicationStore<DB, SK>(pub(crate) HashMap<SK, ApplicationKVBank<PrefixDB<DB>>>);
 
@@ -25,6 +28,9 @@ impl<SK, DB> MultiBankBackend<DB, SK> for ApplicationStore<DB, SK> {
 }
 
 impl<DB: Database, SK: StoreKey> MultiBank<DB, SK, ApplicationStore<DB, SK>> {
+    /// Return new `self`.
+    /// Method create a prefixed db for each store
+    /// and makes sure that no overlap exists
     pub fn new(db: Arc<DB>) -> Result<Self, MultiStoreError<SK>> {
         let mut store_infos = Vec::new();
         let mut head_version = 0;
@@ -57,6 +63,7 @@ impl<DB: Database, SK: StoreKey> MultiBank<DB, SK, ApplicationStore<DB, SK>> {
         })
     }
 
+    /// Return tx kind of store. You need to create application kind before creation of transaction
     pub fn to_tx_kind(&self) -> TransactionMultiBank<DB, SK> {
         TransactionMultiBank {
             head_version: self.head_version,
@@ -72,12 +79,14 @@ impl<DB: Database, SK: StoreKey> MultiBank<DB, SK, ApplicationStore<DB, SK>> {
         }
     }
 
+    /// Consume block cache of transaction stores
     pub fn consume_block_cache(&mut self, other: &mut TransactionMultiBank<DB, SK>) {
         for (sk, store) in &mut self.backend.0 {
             store.consume_block_cache(other.kv_store_mut(sk))
         }
     }
 
+    /// Commit changes for all kv stores and get application hash
     pub fn commit(&mut self) -> [u8; 32] {
         let mut store_infos = vec![];
         for (store, kv_store) in &mut self.backend.0 {
@@ -99,6 +108,7 @@ impl<DB: Database, SK: StoreKey> MultiBank<DB, SK, ApplicationStore<DB, SK>> {
         hash
     }
 
+    /// Clear cache of all stores
     pub fn clear_cache(&mut self) {
         for store in self.backend.0.values_mut() {
             store.cache_clear();

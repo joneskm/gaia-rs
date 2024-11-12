@@ -27,7 +27,7 @@ use tendermint::{
     types::proto::block::Height,
 };
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum TxQuery {
     Tx(QueryGetTxRequest),
     Txs(QueryGetTxsEventRequest),

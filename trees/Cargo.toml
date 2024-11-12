@@ -3,6 +3,9 @@ edition = "2021"
 name = "trees"
 version = "0.1.0"
 
+[lints]
+workspace = true
+
 [dependencies]
 #local
 database = {path = "../database"}
@@ -31,6 +34,7 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 anyhow = { workspace = true }
 extensions = { path = "../extensions" }
+nz = { workspace = true }
 
 [[bench]]
 harness = false

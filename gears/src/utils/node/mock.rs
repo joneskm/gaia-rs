@@ -42,6 +42,7 @@ impl<G> From<InitState<G>> for RequestInitChain<G> {
     }
 }
 
+#[derive(Debug)]
 pub struct MockNode<App, G> {
     app: App,
     app_hash: Bytes,
@@ -53,6 +54,7 @@ pub struct MockNode<App, G> {
     _phantom: std::marker::PhantomData<G>,
 }
 
+#[derive(Debug)]
 pub struct StepResponse {
     pub app_hash: Bytes,
     pub tx_responses: Vec<ResponseDeliverTx>,

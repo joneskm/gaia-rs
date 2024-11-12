@@ -1,46 +1,55 @@
+//! Implementation of addresses used in application
+
 use bech32::{FromBase32, ToBase32, Variant};
 use serde::{Deserialize, Deserializer, Serialize};
 use std::{
     fmt::{self, Display},
+    marker::PhantomData,
     str::FromStr,
 };
 
-const PREFIX_VALIDATOR: &str = "val";
-const PREFIX_OPERATOR: &str = "oper";
-const PREFIX_CONSENSUS: &str = "cons";
+mod prefix;
 
-const BECH_32_PREFIX_ACC_ADDR: &str = env!("BECH_32_MAIN_PREFIX");
-const BECH_32_PREFIX_VAL_ADDR: &str = constcat::concat!(
-    env!("BECH_32_MAIN_PREFIX"),
-    PREFIX_VALIDATOR,
-    PREFIX_OPERATOR
-);
-const BECH_32_PREFIX_CONS_ADDR: &str = constcat::concat!(
-    env!("BECH_32_MAIN_PREFIX"),
-    PREFIX_VALIDATOR,
-    PREFIX_CONSENSUS
-);
+pub use crate::prefix::*;
 
 const MAX_ADDR_LEN: u8 = 255;
 
-pub type AccAddress = BaseAddress<0>;
-pub type ValAddress = BaseAddress<1>;
-pub type ConsAddress = BaseAddress<2>;
+/// identifies users
+pub type AccAddress = BaseAddress<Account>;
+/// identifies validator operators
+pub type ValAddress = BaseAddress<Validator>;
+/// identifies validator nodes that are participating in consensus
+pub type ConsAddress = BaseAddress<Consensus>;
 
-// TODO: when more complex const parameter types arrive, replace u8 with &'static str
-// https://github.com/rust-lang/rust/issues/95174
+/// Base address. Use [AccAddress], [ValAddress] or [ConsAddress] in your code
 #[derive(Debug, PartialEq, Eq, Clone, Hash, PartialOrd, Ord)]
-pub struct BaseAddress<const PREFIX: u8>(Vec<u8>);
+pub struct BaseAddress<T: AddressKind> {
+    bytes: Vec<u8>,
+    _marker: PhantomData<T>,
+}
 
-impl<const PREFIX: u8> BaseAddress<PREFIX> {
+impl<T: AddressKind> BaseAddress<T> {
+    fn new(bytes: Vec<u8>) -> Self {
+        Self {
+            bytes,
+            _marker: PhantomData,
+        }
+    }
+
+    /// Parse address from [bech32](https://en.bitcoin.it/wiki/Bech32) string. Prefix would be added automatically
+    ///
+    /// # Example
+    /// ```rust
+    /// use address::AccAddress;
+    ///
+    /// let addr = AccAddress::from_bech32("cosmos1syavy2npfyt9tcncdtsdzf7kny9lh777pahuux");
+    ///
+    /// assert!(addr.is_ok())
+    /// ```
     pub fn from_bech32(address: &str) -> Result<Self, AddressError> {
         let (hrp, data, variant) = bech32::decode(address)?;
 
-        let prefix = match PREFIX {
-            0 => BECH_32_PREFIX_ACC_ADDR,
-            1 => BECH_32_PREFIX_VAL_ADDR,
-            _ => BECH_32_PREFIX_CONS_ADDR,
-        };
+        let prefix = T::prefix();
 
         if hrp != prefix {
             return Err(AddressError::InvalidPrefix {
@@ -61,12 +70,13 @@ impl<const PREFIX: u8> BaseAddress<PREFIX> {
         let address = Vec::<u8>::from_base32(&data)?;
 
         Self::verify_length(&address)?;
-        Ok(Self(address))
+        Ok(Self::new(address))
     }
 
+    /// Return length of bytes in address
     #[allow(clippy::len_without_is_empty)]
     pub fn len(&self) -> u8 {
-        self.0
+        self.bytes
             .len()
             .try_into()
             .expect("MAX_ADDR_LEN is a u8 so this can't fail")
@@ -75,7 +85,7 @@ impl<const PREFIX: u8> BaseAddress<PREFIX> {
     /// Returns the address bytes prefixed with the length of the address.
     pub fn prefix_len_bytes(&self) -> Vec<u8> {
         let len = self.len();
-        [&[len], self.0.as_slice()].concat()
+        [&[len], self.bytes.as_slice()].concat()
     }
 
     /// Returns the address bytes with the length prefix removed.
@@ -95,8 +105,9 @@ impl<const PREFIX: u8> BaseAddress<PREFIX> {
         v[1..].try_into()
     }
 
+    /// Return hex string representation
     pub fn as_hex(&self) -> String {
-        data_encoding::HEXLOWER.encode(&self.0)
+        data_encoding::HEXLOWER.encode(&self.bytes)
     }
 
     fn verify_length(v: &[u8]) -> Result<(), AddressError> {
@@ -111,19 +122,15 @@ impl<const PREFIX: u8> BaseAddress<PREFIX> {
             Ok(())
         }
     }
-
-    pub fn as_upper_hex(&self) -> String {
-        data_encoding::HEXUPPER.encode(&self.0)
-    }
 }
 
-impl<const PREFIX: u8> AsRef<[u8]> for BaseAddress<PREFIX> {
+impl<T: AddressKind> AsRef<[u8]> for BaseAddress<T> {
     fn as_ref(&self) -> &[u8] {
-        &self.0
+        &self.bytes
     }
 }
 
-impl<const PREFIX: u8> Serialize for BaseAddress<PREFIX> {
+impl<T: AddressKind> Serialize for BaseAddress<T> {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: serde::ser::Serializer,
@@ -132,19 +139,19 @@ impl<const PREFIX: u8> Serialize for BaseAddress<PREFIX> {
     }
 }
 
-impl<'de, const PREFIX: u8> Deserialize<'de> for BaseAddress<PREFIX> {
-    fn deserialize<D>(deserializer: D) -> Result<BaseAddress<PREFIX>, D::Error>
+impl<'de, T: AddressKind> Deserialize<'de> for BaseAddress<T> {
+    fn deserialize<D>(deserializer: D) -> Result<BaseAddress<T>, D::Error>
     where
         D: Deserializer<'de>,
     {
-        deserializer.deserialize_str(BaseAddressVisitor)
+        deserializer.deserialize_str(BaseAddressVisitor(PhantomData))
     }
 }
 
-struct BaseAddressVisitor<const PREFIX: u8>;
+struct BaseAddressVisitor<T>(PhantomData<T>);
 
-impl<'de, const PREFIX: u8> serde::de::Visitor<'de> for BaseAddressVisitor<PREFIX> {
-    type Value = BaseAddress<PREFIX>;
+impl<'de, T: AddressKind> serde::de::Visitor<'de> for BaseAddressVisitor<T> {
+    type Value = BaseAddress<T>;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("bech32 encoded address")
@@ -158,21 +165,17 @@ impl<'de, const PREFIX: u8> serde::de::Visitor<'de> for BaseAddressVisitor<PREFI
     }
 }
 
-impl<const PREFIX: u8> Display for BaseAddress<PREFIX> {
+impl<T: AddressKind> Display for BaseAddress<T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let hrp = match PREFIX {
-            0 => BECH_32_PREFIX_ACC_ADDR,
-            1 => BECH_32_PREFIX_VAL_ADDR,
-            _ => BECH_32_PREFIX_CONS_ADDR,
-        };
+        let hrp = T::prefix();
 
-        let addr = bech32::encode(hrp, self.0.to_base32(), Variant::Bech32)
+        let addr = bech32::encode(hrp, self.bytes.to_base32(), Variant::Bech32)
             .expect("method can only error if HRP is not valid, hard coded HRP is valid");
         write!(f, "{}", addr)
     }
 }
 
-impl<const PREFIX: u8> TryFrom<String> for BaseAddress<PREFIX> {
+impl<T: AddressKind> TryFrom<String> for BaseAddress<T> {
     type Error = AddressError;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
@@ -180,13 +183,13 @@ impl<const PREFIX: u8> TryFrom<String> for BaseAddress<PREFIX> {
     }
 }
 
-impl<const PREFIX: u8> From<BaseAddress<PREFIX>> for String {
-    fn from(v: BaseAddress<PREFIX>) -> String {
+impl<T: AddressKind> From<BaseAddress<T>> for String {
+    fn from(v: BaseAddress<T>) -> String {
         format!("{}", v)
     }
 }
 
-impl<const PREFIX: u8> FromStr for BaseAddress<PREFIX> {
+impl<T: AddressKind> FromStr for BaseAddress<T> {
     type Err = AddressError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -194,46 +197,48 @@ impl<const PREFIX: u8> FromStr for BaseAddress<PREFIX> {
     }
 }
 
-impl<const PREFIX: u8> TryFrom<Vec<u8>> for BaseAddress<PREFIX> {
+impl<T: AddressKind> TryFrom<Vec<u8>> for BaseAddress<T> {
     type Error = AddressError;
 
-    fn try_from(v: Vec<u8>) -> Result<BaseAddress<PREFIX>, AddressError> {
+    fn try_from(v: Vec<u8>) -> Result<BaseAddress<T>, AddressError> {
         Self::verify_length(&v)?;
-        Ok(BaseAddress(v))
+        Ok(BaseAddress::new(v))
     }
 }
 
-impl<const PREFIX: u8> TryFrom<&[u8]> for BaseAddress<PREFIX> {
+impl<T: AddressKind> TryFrom<&[u8]> for BaseAddress<T> {
     type Error = AddressError;
 
-    fn try_from(v: &[u8]) -> Result<BaseAddress<PREFIX>, AddressError> {
+    fn try_from(v: &[u8]) -> Result<BaseAddress<T>, AddressError> {
         v.to_vec().try_into()
     }
 }
 
-impl<const PREFIX: u8> From<BaseAddress<PREFIX>> for Vec<u8> {
-    fn from(v: BaseAddress<PREFIX>) -> Vec<u8> {
-        v.0
+impl<T: AddressKind> From<BaseAddress<T>> for Vec<u8> {
+    fn from(v: BaseAddress<T>) -> Vec<u8> {
+        v.bytes
     }
 }
 
 // TODO: CHECK IS IT SAFE TO CONVERT ONE KEY TO OTHER
 impl From<AccAddress> for ValAddress {
     fn from(value: AccAddress) -> Self {
-        Self(value.0)
+        Self::new(value.bytes)
     }
 }
 impl From<ValAddress> for ConsAddress {
     fn from(value: ValAddress) -> Self {
-        Self(value.0)
+        Self::new(value.bytes)
     }
 }
 impl From<ValAddress> for AccAddress {
     fn from(value: ValAddress) -> Self {
-        Self(value.0)
+        Self::new(value.bytes)
     }
 }
 
+/// Address parsing errors
+#[allow(missing_docs)]
 #[derive(thiserror::Error, Debug, Clone, PartialEq, Eq)]
 pub enum AddressError {
     #[error(transparent)]
@@ -273,7 +278,7 @@ mod tests {
         )
         .unwrap_test();
 
-        let expected_address = BaseAddress::<0>(input_address);
+        let expected_address = BaseAddress::<Account>::new(input_address);
 
         let address = AccAddress::from_bech32(&encoded);
 

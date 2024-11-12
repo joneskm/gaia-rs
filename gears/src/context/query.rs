@@ -10,6 +10,7 @@ use crate::types::store::kv::Store;
 
 use super::{InfallibleContext, QueryableContext};
 
+#[derive(Debug)]
 pub struct QueryContext<DB, SK> {
     multi_store: QueryMultiStore<DB, SK>,
     pub(crate) height: u32,

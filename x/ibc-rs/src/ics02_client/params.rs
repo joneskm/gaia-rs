@@ -3,6 +3,7 @@ use std::collections::HashSet;
 
 use gears::context::InfallibleContext;
 use gears::context::InfallibleContextMut;
+use gears::gas::store::errors::GasStoreErrors;
 use gears::params::gas;
 use gears::params::infallible_subspace;
 use gears::params::infallible_subspace_mut;
@@ -10,7 +11,6 @@ use gears::params::ParamKind;
 use gears::params::ParamsDeserialize;
 use gears::params::ParamsSerialize;
 use gears::params::ParamsSubspaceKey;
-use gears::types::store::gas::errors::GasStoreErrors;
 use gears::{
     context::{QueryableContext, TransactionalContext},
     store::{
@@ -39,14 +39,10 @@ impl ParamsSerialize for ClientParams {
     }
 
     fn to_raw(&self) -> Vec<(&'static str, Vec<u8>)> {
-        let mut hash_map = Vec::with_capacity(1);
-
-        hash_map.push((
+        vec![(
             KEY_ALLOWED_CLIENTS,
             serde_json::to_vec(&self.allowed_clients).expect("conversion to json won't fail"),
-        ));
-
-        hash_map
+        )]
     }
 }
 

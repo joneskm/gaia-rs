@@ -3,11 +3,11 @@ use std::{cell::RefCell, sync::Arc};
 use gears::{
     application::handlers::node::ABCIHandler,
     baseapp::{options::NodeOptions, NullQueryRequest, NullQueryResponse},
+    gas::metering::GasMeter,
     params::ParamsSubspaceKey,
     store::StoreKey,
     types::{
         base::min_gas::MinGasPrices,
-        gas::GasMeter,
         tx::{raw::TxWithRaw, NullTxMsg},
     },
     x::{

@@ -1,16 +1,22 @@
+//! Different helpers
+
 use sha2::{Digest, Sha256};
 
 const LEAF_PREFIX: [u8; 1] = [0];
 const INNER_PREFIX: [u8; 1] = [1];
+/// Hash when tree is empty
 pub const EMPTY_HASH: [u8; 32] = [
     227, 176, 196, 66, 152, 252, 28, 20, 154, 251, 244, 200, 153, 111, 185, 36, 39, 174, 65, 228,
     100, 155, 147, 76, 164, 149, 153, 27, 120, 82, 184, 85,
 ]; // = Sha256::digest([]).into()
 
+/// Length of hash
 pub const HASH_LENGTH: usize = 32;
 
+/// Alias to hash array
 pub type Sha256Hash = [u8; HASH_LENGTH];
 
+/// TODO: Move to kv_store
 pub fn root_hash(items: &[Vec<u8>]) -> [u8; 32] {
     match items.len() {
         0 => EMPTY_HASH,

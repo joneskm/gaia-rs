@@ -60,7 +60,7 @@ fn calculate_password_hash(password: Option<impl AsRef<str>>) -> Result<String, 
             })?
             .to_string())
     } else {
-        Ok("".into())
+        Ok(String::new())
     }
 }
 
@@ -93,11 +93,7 @@ fn set_readonly(file: File, path: String) -> Result<(), Error> {
 }
 
 /// Opens an existing keyring or creates a new one if `create` is `true`.
-fn open<'a>(
-    path: impl AsRef<Path>,
-    create: bool,
-    backend: Backend,
-) -> Result<Option<String>, Error> {
+fn open(path: impl AsRef<Path>, create: bool, backend: Backend) -> Result<Option<String>, Error> {
     let key_hash_path = path.as_ref().join(KEY_HASH_FILE);
 
     match fs::read_to_string(&key_hash_path) {
@@ -157,6 +153,7 @@ fn open<'a>(
                     let mut file = OpenOptions::new()
                         .write(true)
                         .create(true)
+                        .truncate(true)
                         .open(&key_hash_path)
                         .map_err(|e| Error::FileIO {
                             msg: e.to_string(),
@@ -324,7 +321,7 @@ where
     })
 }
 
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq)]
 pub enum Backend {
     Test,
     Encrypted,

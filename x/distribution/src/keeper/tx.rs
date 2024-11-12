@@ -14,7 +14,7 @@ impl<
 {
     pub fn withdraw_delegator_reward_and_commission<DB: Database>(
         &self,
-        ctx: &mut TxContext<DB, SK>,
+        ctx: &mut TxContext<'_, DB, SK>,
         msg: &MsgWithdrawDelegatorReward,
     ) -> Result<(), DistributionError> {
         self.withdraw_delegation_rewards(ctx, &msg.delegator_address, &msg.validator_address)?;
@@ -59,7 +59,7 @@ impl<
 
     pub fn set_withdraw_address<DB: Database>(
         &self,
-        ctx: &mut TxContext<DB, SK>,
+        ctx: &mut TxContext<'_, DB, SK>,
         msg: &MsgSetWithdrawAddr,
     ) -> Result<(), DistributionError> {
         self.set_delegator_withdraw_addr(ctx, &msg.delegator_address, &msg.withdraw_address)?;
@@ -85,7 +85,7 @@ impl<
 
     pub fn fund_community_pool_cmd<DB: Database>(
         &self,
-        ctx: &mut TxContext<DB, SK>,
+        ctx: &mut TxContext<'_, DB, SK>,
         msg: &MsgFundCommunityPool,
     ) -> Result<(), DistributionError> {
         self.fund_community_pool(ctx, msg.amount.clone(), &msg.depositor)?;

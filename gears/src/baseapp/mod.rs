@@ -2,6 +2,7 @@ pub mod options;
 use std::{
     fmt::Debug,
     marker::PhantomData,
+    num::NonZero,
     sync::{Arc, RwLock},
 };
 
@@ -10,14 +11,12 @@ use crate::{
     context::{query::QueryContext, simple::SimpleContext, tx::TxContext},
     error::POISONED_LOCK,
     params::ParamsSubspaceKey,
-    types::{
-        gas::{descriptor::BLOCK_GAS_DESCRIPTOR, kind::BlockKind, FiniteGas, Gas, GasMeter},
-        tx::raw::TxWithRaw,
-    },
+    types::tx::raw::TxWithRaw,
 };
 use bytes::Bytes;
 use database::Database;
 use errors::QueryError;
+use gas::metering::{descriptor::BLOCK_GAS_DESCRIPTOR, kind::BlockKind, FiniteGas, Gas, GasMeter};
 use kv_store::{
     bank::multi::{ApplicationMultiBank, TransactionMultiBank},
     query::QueryMultiStore,
@@ -46,6 +45,7 @@ pub use params::{
 
 pub use query::*;
 
+/// Core ABCI application which stores all data needed to execute application
 #[derive(Debug, Clone)]
 pub struct BaseApp<DB: Database, PSK: ParamsSubspaceKey, H: ABCIHandler, AI: ApplicationInfo> {
     state: Arc<RwLock<ApplicationState<DB, H>>>,
@@ -60,6 +60,10 @@ pub struct BaseApp<DB: Database, PSK: ParamsSubspaceKey, H: ABCIHandler, AI: App
 impl<DB: Database, PSK: ParamsSubspaceKey, H: ABCIHandler, AI: ApplicationInfo>
     BaseApp<DB, PSK, H, AI>
 {
+    /// Create new `self`. Gas prices would be set from
+    /// params store which returns `Default` if not values is set.
+    ///
+    /// See [BlockParams] for details on which values is used
     pub fn new(db: DB, params_subspace_key: PSK, abci_handler: H, options: NodeOptions) -> Self {
         let multi_store = ApplicationMultiBank::new(Arc::new(db));
         let mut multi_store = match multi_store {
@@ -104,19 +108,25 @@ impl<DB: Database, PSK: ParamsSubspaceKey, H: ABCIHandler, AI: ApplicationInfo>
 
     fn run_query(&self, request: &RequestQuery) -> Result<Bytes, QueryError> {
         //TODO: request height u32
-        let version: u32 = request
-            .height
-            .try_into()
-            .map_err(|_| QueryError::InvalidHeight)?;
+        let version = NonZero::new(
+            request
+                .height
+                .try_into()
+                .map_err(|_| QueryError::InvalidHeight)?,
+        );
 
         let store = self.multi_store.read().expect(POISONED_LOCK);
-        let ctx = QueryContext::new(QueryMultiStore::new(&*store, version)?, version)?;
+        let ctx = QueryContext::new(
+            QueryMultiStore::new(&*store, version)?,
+            version.map(|this| this.get()).unwrap_or_default(),
+        )?;
 
         self.abci_handler
             .query(&ctx, request.clone())
             .map(Into::into)
     }
 
+    /// Execute transaction for specific mode
     fn run_tx<MD: ExecutionMode<DB, H>>(
         &self,
         raw: Bytes,

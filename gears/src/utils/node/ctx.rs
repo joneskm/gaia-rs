@@ -1,6 +1,10 @@
 use std::sync::Arc;
 
 use database::MemDB;
+use gas::metering::{
+    kind::{BlockKind, TxKind},
+    GasMeter,
+};
 use kv_store::{
     bank::multi::{ApplicationMultiBank, TransactionMultiBank},
     StoreKey,
@@ -10,16 +14,13 @@ use tendermint::types::proto::header::Header;
 use crate::{
     baseapp::{options::NodeOptions, ConsensusParams},
     context::{init::InitContext, tx::TxContext},
-    types::gas::{
-        kind::{BlockKind, TxKind},
-        GasMeter,
-    },
 };
 
 pub fn build_store<SK: StoreKey>() -> ApplicationMultiBank<MemDB, SK> {
     ApplicationMultiBank::new(Arc::new(MemDB::new())).expect("Failed to build store")
 }
 
+#[derive(Debug)]
 pub struct ContextOptions {
     height: u32,
     header: Header,

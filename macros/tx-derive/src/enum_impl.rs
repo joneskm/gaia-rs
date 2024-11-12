@@ -55,7 +55,7 @@ pub fn expand_macro(
             if value.type_url.starts_with(#url) {
                 Ok(Self::#ident(#crate_prefix::core::any::google::Any::try_into(value)?))
             }
-        })
+        });
     }
 
     let (impl_generics, ty_generics, where_clause) = generics.split_for_impl();

@@ -11,10 +11,12 @@ use k256::elliptic_curve::rand_core;
 use rand_core::OsRng;
 
 /// Used to specify the type of key to generate.
+#[derive(Debug)]
 pub enum KeyType {
     Secp256k1,
 }
 
+#[derive(Debug, Clone, Copy)]
 pub enum Backend<'a> {
     File(&'a Path),
     Test(&'a Path),
@@ -25,7 +27,7 @@ pub fn add_key<S>(
     name: S,
     mnemonic: &Mnemonic,
     key_type: KeyType,
-    backend: Backend,
+    backend: Backend<'_>,
 ) -> Result<KeyPair, Error>
 where
     S: AsRef<str>,
@@ -51,7 +53,7 @@ where
 pub fn create_key<S>(
     name: S,
     key_type: KeyType,
-    backend: Backend,
+    backend: Backend<'_>,
 ) -> Result<(Mnemonic, KeyPair), Error>
 where
     S: AsRef<str>,
@@ -62,7 +64,7 @@ where
 }
 
 /// Get a key by name.
-pub fn key_by_name<S>(name: &S, backend: Backend) -> Result<KeyPair, Error>
+pub fn key_by_name<S>(name: &S, backend: Backend<'_>) -> Result<KeyPair, Error>
 where
     S: AsRef<str> + ?Sized,
 {
@@ -76,7 +78,7 @@ where
 }
 
 /// Delete a key by name.
-pub fn delete_key_by_name<S>(name: S, backend: Backend) -> Result<(), Error>
+pub fn delete_key_by_name<S>(name: S, backend: Backend<'_>) -> Result<(), Error>
 where
     S: AsRef<str>,
 {

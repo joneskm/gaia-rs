@@ -5,6 +5,7 @@ use super::{
     ledger::{LedgerError, LedgerProxyKey},
 };
 
+#[derive(Debug)]
 pub enum AnyKey {
     Local(KeyPair),
     Ledger(LedgerProxyKey),

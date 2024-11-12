@@ -3,11 +3,9 @@ use std::ops::RangeBounds;
 use database::Database;
 use kv_store::store::kv::immutable::KVStore;
 
-use super::{
-    gas::{errors::GasStoreErrors, kv::GasKVStore},
-    prefix::PrefixStore,
-    range::StoreRange,
-};
+use super::{prefix::PrefixStore, range::StoreRange};
+
+use gas::store::{errors::GasStoreErrors, kv::GasKVStore};
 
 pub mod mutable;
 

@@ -1,7 +1,7 @@
 use gears::config::ApplicationConfig;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Default, Clone)]
+#[derive(Deserialize, Serialize, Default, Debug, Clone)]
 pub struct AppConfig {
     pub example: u32,
 }

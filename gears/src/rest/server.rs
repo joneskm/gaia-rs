@@ -40,7 +40,7 @@ pub fn run_rest_server<
     });
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct RestState<QReq, QRes, App: NodeQueryHandler<QReq, QRes>> {
     pub app: App,
     pub tendermint_rpc_address: HttpClientUrl,

@@ -12,11 +12,10 @@ use crate::{
         keys::KeyringBackend,
         tx::{AccountProvider, ClientTxContext, Keyring as TxKeyring, LocalInfo, TxCommand},
     },
-    types::{
-        auth::{fee::Fee, gas::Gas},
-        base::coins::UnsignedCoins,
-    },
+    types::{auth::fee::Fee, base::coins::UnsignedCoins},
 };
+
+use gas::Gas;
 
 /// Transaction subcommands
 #[derive(Debug, Clone, ::clap::Args)]

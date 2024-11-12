@@ -1,6 +1,9 @@
+//! Implementation of KV Store for storing data while app running and commit changes
+
 use std::{
     borrow::Cow,
     collections::BTreeMap,
+    num::NonZero,
     ops::RangeBounds,
     sync::{Arc, RwLock},
 };
@@ -23,6 +26,12 @@ use crate::{
 
 use super::transaction::TransactionKVBank;
 
+/// Store used during processing of transactions.
+/// This store contains single layer of cache which may be commit'ed to tree and persisted on drive.
+/// Generally this store should be used in query or {begin/end}_block methods of application.
+///
+/// *Note*: ordering of insertion doesn't impact state hash as it does with plain tree.
+/// This is due all insertion and deletion is sorted in lexicographical order and executed during [Self::commit]
 #[derive(Debug)]
 pub struct ApplicationKVBank<DB> {
     pub(crate) persistent: Arc<RwLock<Tree<DB>>>,
@@ -30,9 +39,10 @@ pub struct ApplicationKVBank<DB> {
 }
 
 impl<DB: Database> ApplicationKVBank<DB> {
+    /// Create new `self`
     pub fn new(
         db: DB,
-        target_version: Option<u32>,
+        target_version: Option<NonZero<u32>>,
         name: Option<String>,
     ) -> Result<Self, KVStoreError> {
         Ok(Self {
@@ -50,7 +60,7 @@ impl<DB: Database> ApplicationKVBank<DB> {
 
     /// Read persistent database
     #[inline]
-    pub fn persistent(&self) -> std::sync::RwLockReadGuard<Tree<DB>> {
+    pub fn persistent(&self) -> std::sync::RwLockReadGuard<'_, Tree<DB>> {
         self.persistent.read().expect(POISONED_LOCK)
     }
 
@@ -98,6 +108,7 @@ impl<DB: Database> ApplicationKVBank<DB> {
             .or(self.persistent().get(k.as_ref()))
     }
 
+    /// Return store which uses prefix for all store methods
     pub fn prefix_store<I: IntoIterator<Item = u8>>(
         &self,
         prefix: I,
@@ -108,6 +119,7 @@ impl<DB: Database> ApplicationKVBank<DB> {
         }
     }
 
+    /// Return store which uses prefix for all store methods
     pub fn prefix_store_mut<I: IntoIterator<Item = u8>>(
         &mut self,
         prefix: I,
@@ -118,6 +130,7 @@ impl<DB: Database> ApplicationKVBank<DB> {
         }
     }
 
+    /// Return range which iterates over values in tree and cache without cloning cache values
     pub fn range<R: RangeBounds<Vec<u8>> + Clone>(&self, range: R) -> Range<'_, DB, Vec<u8>, R> {
         let cached_values = self
             .cache
@@ -135,6 +148,8 @@ impl<DB: Database> ApplicationKVBank<DB> {
         MergedRange::merge(cached_values, persisted_values).into()
     }
 
+    /// Consume(take, leave empty) cache of successful transactions from [TransactionKVBank].
+    /// This method don't clear any state from transaction layer of cache
     pub fn consume_block_cache(&mut self, other: &mut TransactionKVBank<DB>) {
         let (set_values, del_values) = other.block.take();
 
@@ -147,6 +162,11 @@ impl<DB: Database> ApplicationKVBank<DB> {
         }
     }
 
+    /// Commit changes from cache to tree and return state hash
+    ///
+    /// # Panics
+    /// Currently this method could panic if fails to persist changes to disk.
+    /// This is matter of changes and should be discussed.
     pub fn commit(&mut self) -> [u8; 32] {
         let (insert, delete) = self.cache.take();
 

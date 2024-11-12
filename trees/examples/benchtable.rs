@@ -1,3 +1,5 @@
+#![allow(missing_docs)]
+
 use std::{
     fmt::{self, Display},
     fs::File,
@@ -112,7 +114,7 @@ struct UnitVisitor;
 impl<'de> serde::de::Visitor<'de> for UnitVisitor {
     type Value = Unit;
 
-    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+    fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("either ns, µs, ms or s")
     }
 

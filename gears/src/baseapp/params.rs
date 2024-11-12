@@ -217,7 +217,6 @@ impl<PSK: ParamsSubspaceKey> ParamsKeeper<PSK> for BaseAppParamsKeeper<PSK> {
     }
 }
 
-// TODO: add a macro to create this?
 impl<PSK: ParamsSubspaceKey> BaseAppParamsKeeper<PSK> {
     pub fn set_consensus_params<DB: Database, SK: StoreKey, CTX: InfallibleContextMut<DB, SK>>(
         &self,

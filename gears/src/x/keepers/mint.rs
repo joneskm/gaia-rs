@@ -1,10 +1,11 @@
 use cosmwasm_std::Decimal256;
 use database::Database;
+use gas::store::errors::GasStoreErrors;
 use kv_store::StoreKey;
 
 use crate::{
     context::{QueryableContext, TransactionalContext},
-    types::{base::coins::UnsignedCoins, denom::Denom, store::gas::errors::GasStoreErrors},
+    types::{base::coins::UnsignedCoins, denom::Denom},
     x::{errors::BankKeeperError, module::Module},
 };
 

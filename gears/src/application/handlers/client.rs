@@ -240,6 +240,7 @@ pub trait NodeFetcher {
     ) -> anyhow::Result<Option<Metadata>>;
 }
 
+#[derive(Debug)]
 pub struct MetadataViaRPC<F: NodeFetcher> {
     pub node: url::Url,
     pub fetcher: F,

@@ -4,10 +4,11 @@ use database::Database;
 use kv_store::store::kv::mutable::KVStoreMut;
 
 use crate::types::store::{
-    gas::{errors::GasStoreErrors, kv::mutable::GasKVStoreMut},
     prefix::{mutable::PrefixStoreMut, PrefixStore},
     range::StoreRange,
 };
+
+use gas::store::{errors::GasStoreErrors, kv::mutable::GasKVStoreMut};
 
 #[derive(Debug)]
 pub enum StoreMutBackend<'a, DB> {

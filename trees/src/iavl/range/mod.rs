@@ -9,11 +9,12 @@ use database::Database;
 
 use super::{node_db::NodeDB, Node};
 
+/// Range from tree. Loads nodes on requirement
 #[derive(Debug, Clone)]
 pub struct Range<'a, DB, RB, R> {
     range: R,
-    delayed_nodes: Vec<Box<Node>>,
-    delayed_nodes_rev: Vec<Box<Node>>,
+    delayed_nodes: Vec<Node>,
+    delayed_nodes_rev: Vec<Node>,
     node_db: &'a NodeDB<DB>,
     _marker: PhantomData<RB>,
 }
@@ -22,8 +23,8 @@ impl<'a, DB, RB, R> Range<'a, DB, RB, R> {
     pub(crate) fn new(range: R, root: Option<Box<Node>>, node_db: &'a NodeDB<DB>) -> Self {
         Self {
             range,
-            delayed_nodes: root.clone().map(|this| vec![this]).unwrap_or_default(),
-            delayed_nodes_rev: root.map(|this| vec![this]).unwrap_or_default(),
+            delayed_nodes: root.clone().map(|this| vec![*this]).unwrap_or_default(),
+            delayed_nodes_rev: root.map(|this| vec![*this]).unwrap_or_default(),
             node_db,
             _marker: PhantomData,
         }
@@ -46,26 +47,26 @@ impl<'a, DB: Database, R: RangeBounds<RB>, RB: AsRef<[u8]>> Range<'a, DB, RB, R>
             Bound::Unbounded => true,
         };
 
-        match *node {
+        match node {
             Node::Inner(inner) => {
                 // Traverse through the left subtree, then the right subtree.
                 if before_end {
                     match inner.right_node {
-                        Some(right_node) => self.delayed_nodes.push(right_node),
+                        Some(right_node) => self.delayed_nodes.push(*right_node),
                         None => {
                             let right_node = self
                                 .node_db
                                 .get_node(&inner.right_hash)
                                 .expect("node db should contain all nodes");
 
-                            self.delayed_nodes.push(right_node);
+                            self.delayed_nodes.push(*right_node);
                         }
                     }
                 }
 
                 if after_start {
                     match inner.left_node {
-                        Some(left_node) => self.delayed_nodes.push(left_node),
+                        Some(left_node) => self.delayed_nodes.push(*left_node),
                         None => {
                             let left_node = self
                                 .node_db
@@ -73,7 +74,7 @@ impl<'a, DB: Database, R: RangeBounds<RB>, RB: AsRef<[u8]>> Range<'a, DB, RB, R>
                                 .expect("node db should contain all nodes");
 
                             //self.cached_nodes.push(left_node);
-                            self.delayed_nodes.push(left_node);
+                            self.delayed_nodes.push(*left_node);
                         }
                     }
 

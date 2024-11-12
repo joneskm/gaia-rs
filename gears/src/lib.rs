@@ -19,6 +19,10 @@ pub mod utils;
 #[cfg(feature = "xmods")]
 pub mod x;
 
+pub mod gas {
+    pub use gas::*;
+}
+
 pub mod extensions {
     pub use extensions::*;
 }

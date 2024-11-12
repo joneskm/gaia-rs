@@ -8,7 +8,7 @@
 use crate::informal::node::{Info, OtherInfo, ProtocolVersionInfo};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct DefaultNodeInfo {
     pub protocol_version: Option<ProtocolVersion>,
     pub default_node_id: String,
@@ -46,7 +46,7 @@ impl From<Info> for DefaultNodeInfo {
     }
 }
 
-#[derive(Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct ProtocolVersion {
     pub p2p: u64,
     pub block: u64,
@@ -59,7 +59,7 @@ impl From<ProtocolVersionInfo> for ProtocolVersion {
     }
 }
 
-#[derive(Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct DefaultNodeInfoOther {
     // TODO: original is a String
     pub tx_index: bool,

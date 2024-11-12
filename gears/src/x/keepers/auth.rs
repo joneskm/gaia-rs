@@ -1,9 +1,10 @@
 use database::Database;
+use gas::store::errors::GasStoreErrors;
 use kv_store::StoreKey;
 
 use crate::{
     context::{QueryableContext, TransactionalContext},
-    types::{account::Account, address::AccAddress, store::gas::errors::GasStoreErrors},
+    types::{account::Account, address::AccAddress},
     x::module::Module,
 };
 

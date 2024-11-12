@@ -9,7 +9,7 @@ use super::{
 };
 
 pub mod inner {
-    pub use core_types::auth::info::AuthInfo;
+    pub use core_types::auth::AuthInfo;
 }
 
 /// AuthInfo describes the fee and signer modes that are used to sign a

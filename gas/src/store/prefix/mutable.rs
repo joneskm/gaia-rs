@@ -1,7 +1,7 @@
 use database::Database;
 use kv_store::store::prefix::mutable::MutablePrefixStore;
 
-use crate::types::store::gas::{errors::GasStoreErrors, guard::GasGuard};
+use crate::store::{errors::GasStoreErrors, guard::GasGuard};
 
 use super::GasPrefixStore;
 

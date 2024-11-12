@@ -5,11 +5,15 @@ use vec1::Vec1;
 
 use super::{PaginationResultElement, TwoIterators};
 
+/// Result of pagination by key in bytes
 pub type PaginationByKeyResult = PaginationResultElement<Vec<u8>>;
 
+/// Paginate by key
 #[derive(Debug, Clone)]
 pub struct PaginationByKey {
+    /// key to begin iteration
     pub key: Vec1<u8>,
+    /// max amount of items
     pub limit: usize,
 }
 
@@ -19,18 +23,25 @@ impl From<(Vec1<u8>, usize)> for PaginationByKey {
     }
 }
 
+/// Trait which each item should implement to iterate over keys instead of index
 pub trait PaginationKey {
+    /// Return key to iterate over
     fn iterator_key(&self) -> Cow<'_, [u8]>;
 }
 
+/// Trait which contains methods to paginate by key
 pub trait IteratorPaginateByKey {
+    /// Item in iterator
     type Item;
 
+    /// Paginate by key and get result of pagination which contains information about next key
     fn paginate_by_key(
         self,
         pagination: impl Into<PaginationByKey>,
     ) -> (PaginationByKeyResult, impl Iterator<Item = Self::Item>);
 
+    /// Same as [IteratorPaginateByKey::paginate_by_key], but accept optional pagination.
+    /// Useful when user could set pagination, but by default it's `None`
     fn maybe_paginate_by_key<P: Into<PaginationByKey>>(
         self,
         pagination: Option<P>,

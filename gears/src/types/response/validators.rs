@@ -7,7 +7,7 @@ use tendermint::informal::validator::Info;
 
 /// GetLatestValidatorSetResponse is the response type for the
 /// Query/GetValidatorSetByHeight RPC method.
-#[derive(Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct GetLatestValidatorSetResponse {
     pub block_height: i64,
     pub validators: Vec<Validator>,
@@ -17,7 +17,7 @@ pub struct GetLatestValidatorSetResponse {
 
 // TODO: consider to place in another place
 /// Validator is the type for the validator-set.
-#[derive(Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct Validator {
     pub address: String,
     pub pub_key: Option<Any>,

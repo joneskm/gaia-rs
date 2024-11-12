@@ -1,3 +1,5 @@
+//! Extension for ergonomic error handling when mapping functions that return [Result]
+
 /// Copy from: [try_map](https://docs.rs/try_map/latest/src/try_map/lib.rs.html#13-19) crate \
 /// This method still not a part of std(but have [plans](https://github.com/rust-lang/rfcs/issues/1815) for it) so I copied it temporally
 ///

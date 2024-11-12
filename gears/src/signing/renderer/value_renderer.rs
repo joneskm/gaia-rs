@@ -42,4 +42,5 @@ pub trait ValueRenderer {
 /// Default implementation of `PrimitiveValueRenderer` for `Screen`. This is an attempt
 /// at a blanket implementation for all primitive types described in the Cosmos SDK:
 /// https://docs.cosmos.network/v0.50/build/architecture/adr-050-sign-mode-textual-annex1#bytes
+#[derive(Debug)]
 pub struct DefaultPrimitiveRenderer;

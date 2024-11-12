@@ -13,6 +13,7 @@ pub use presets::*;
 
 use crate::{application::ApplicationInfo, crypto::keys::ReadAccAddress};
 
+#[derive(Debug)]
 pub struct User {
     pub key_pair: KeyPair,
     pub account_number: u64,

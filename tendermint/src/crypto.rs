@@ -20,9 +20,9 @@ impl TryFrom<tendermint_informal::PrivateKey> for PublicKey {
     fn try_from(value: tendermint_informal::PrivateKey) -> Result<Self, Self::Error> {
         match value {
             tendermint_informal::PrivateKey::Ed25519(key) => {
-                Ok(PublicKey::Ed25519(key.as_bytes().to_vec().try_into().expect("cannot fail since as_bytes returns a &[u8; 32] and try_into method only fails if slice.len() != 32")))
+                Ok(PublicKey::Ed25519(key.as_bytes().to_vec())) // cannot fail since as_bytes returns a &[u8; 32] and try_into method only fails if slice.len() != 32
             }
-            _ => Err(ConversionError{}),
+            _ => Err(ConversionError {}),
         }
     }
 }

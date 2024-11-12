@@ -1,3 +1,13 @@
+//! Context is specific state to carry across your application.
+//! Main usage for all kinds of contexts is access to specific key value store
+//! which allows interaction with database. For these reason exists [QueryableContext] and [TransactionalContext] traits
+//! which allow re-usage of method byt all contexts.
+//!
+//! However this traits include gas while {begin/end}_block methods can't have any gas, so
+//! you need to use [InfallibleContext] or mutable variant [InfallibleContextMut].
+//!
+//! In other cases prefer concrete type if you know context(haha) of usage.
+
 use database::prefix::PrefixDB;
 use kv_store::store::kv::{immutable::KVStore, mutable::KVStoreMut};
 use tendermint::types::{chain_id::ChainId, proto::event::Event, time::timestamp::Timestamp};

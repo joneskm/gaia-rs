@@ -1,5 +1,6 @@
 use cosmwasm_std::Decimal256;
 use database::Database;
+use gas::store::errors::GasStoreErrors;
 use kv_store::StoreKey;
 use tendermint::types::proto::validator::VotingPower;
 
@@ -8,7 +9,6 @@ use crate::{
     types::{
         address::{AccAddress, ConsAddress, ValAddress},
         base::{coin::UnsignedCoin, coins::UnsignedCoins},
-        store::gas::errors::GasStoreErrors,
     },
     x::{
         errors::BankKeeperError,

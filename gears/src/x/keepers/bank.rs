@@ -1,5 +1,6 @@
 use database::Database;
 use extensions::pagination::{Pagination, PaginationResult};
+use gas::store::errors::GasStoreErrors;
 use kv_store::StoreKey;
 
 use crate::{
@@ -9,7 +10,6 @@ use crate::{
         base::{coin::UnsignedCoin, coins::UnsignedCoins},
         denom::Denom,
         msg::send::MsgSend,
-        store::gas::errors::GasStoreErrors,
         tx::metadata::Metadata,
     },
     x::{errors::BankKeeperError, module::Module},

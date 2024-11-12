@@ -1,10 +1,12 @@
 use database::Database;
+use gas::store::errors::GasStoreErrors;
 
 use crate::{
     params::{parsed::Params, ParamKind, ParamsDeserialize},
-    types::store::{gas::errors::GasStoreErrors, prefix::PrefixStore},
+    types::store::prefix::PrefixStore,
 };
 
+#[derive(Debug)]
 pub struct GasParamsSpace<'a, DB> {
     pub(super) inner: PrefixStore<'a, DB>,
 }

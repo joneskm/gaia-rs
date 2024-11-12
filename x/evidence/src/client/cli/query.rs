@@ -72,7 +72,7 @@ impl QueryHandler for EvidenceQueryHandler {
     }
 }
 
-#[derive(Clone, PartialEq, Query)]
+#[derive(Clone, Debug, PartialEq, Query)]
 pub enum EvidenceQueryRequest {
     Evidence(QueryEvidenceRequest),
     AllEvidence(QueryAllEvidenceRequest),

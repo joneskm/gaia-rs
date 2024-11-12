@@ -3,6 +3,9 @@ edition = "2021"
 name = "tx-derive"
 version = "0.1.0"
 
+[lints]
+workspace = true
+
 [lib]
 proc-macro = true
 

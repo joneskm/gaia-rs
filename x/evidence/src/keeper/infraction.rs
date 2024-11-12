@@ -38,7 +38,7 @@ where
     // in the case of a lunatic attack.
     pub fn handle_equivocation_evidence<DB: Database>(
         &self,
-        ctx: &mut BlockContext<DB, SK>,
+        ctx: &mut BlockContext<'_, DB, SK>,
         evidence: &Equivocation,
         // TODO: error type
     ) -> anyhow::Result<()> {

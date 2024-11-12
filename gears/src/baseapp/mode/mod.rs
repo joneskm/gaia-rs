@@ -1,3 +1,6 @@
+use gas::metering::{
+    basic_meter::BasicGasMeter, infinite_meter::InfiniteGasMeter, kind::TxKind, GasMeter,
+};
 use tendermint::types::proto::event::Event;
 
 use self::sealed::Sealed;
@@ -5,18 +8,15 @@ use crate::{
     application::handlers::node::ABCIHandler,
     baseapp::errors::RunTxError,
     context::tx::TxContext,
-    types::{
-        auth::fee::Fee,
-        gas::{
-            basic_meter::BasicGasMeter, infinite_meter::InfiniteGasMeter, kind::TxKind, GasMeter,
-        },
-        tx::raw::TxWithRaw,
-    },
+    types::{auth::fee::Fee, tx::raw::TxWithRaw},
 };
 
 pub mod check;
 pub mod deliver;
 
+/// Execution mode or state of application.
+/// It exists to split logic of checking a tx with `check_tx` and
+/// execution with `deliver_tx`. Each mode should have own store and don't share any state
 pub trait ExecutionMode<DB, AH: ABCIHandler>: Sealed {
     fn runnable(ctx: &mut TxContext<'_, DB, AH::StoreKey>) -> Result<(), RunTxError>;
 

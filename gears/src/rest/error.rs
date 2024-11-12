@@ -74,7 +74,7 @@ impl HTTPError {
         }
     }
 
-    fn to_serializable(self) -> PrintError {
+    fn into_serializable(self) -> PrintError {
         PrintError {
             error: PrintErrorCore {
                 code: self.status.as_u16(),
@@ -91,7 +91,7 @@ impl HTTPError {
 
 impl IntoResponse for HTTPError {
     fn into_response(self) -> Response {
-        (self.status, Json(self.to_serializable())).into_response()
+        (self.status, Json(self.into_serializable())).into_response()
     }
 }
 

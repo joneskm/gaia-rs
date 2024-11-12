@@ -1,4 +1,6 @@
-use crate::{application::handlers::node::TxError, types::gas::GasMeteringErrors};
+use gas::metering::GasMeteringErrors;
+
+use crate::application::handlers::node::TxError;
 
 // We start at u16::MAX + 1 to ensure that the error codes don't collide with the Application codes
 const OUT_OF_GAS_CODE: u32 = u16::MAX as u32 + 1;

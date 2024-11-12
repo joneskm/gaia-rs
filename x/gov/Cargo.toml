@@ -3,6 +3,9 @@ name = "gov"
 version = "0.1.0"
 edition = "2021"
 
+[lints]
+workspace = true
+
 [dependencies]
 
 # unsorted
@@ -26,5 +29,3 @@ thiserror = { workspace = true }
 tonic = { workspace = true }
 tracing = { workspace = true }
 
-[lints]
-workspace = true

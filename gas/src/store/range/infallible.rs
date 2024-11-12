@@ -2,7 +2,7 @@ use std::{borrow::Cow, ops::RangeBounds};
 
 use database::Database;
 
-use crate::types::store::gas::errors::GasStoreErrors;
+use crate::store::errors::GasStoreErrors;
 
 use super::{GasRange, RangeBackend};
 

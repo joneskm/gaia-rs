@@ -7,13 +7,15 @@ pub struct KVCache {
     pub(crate) delete: HashSet<Vec<u8>>,
 }
 
+pub type KVCacheCollection = (BTreeMap<Vec<u8>, Vec<u8>>, HashSet<Vec<u8>>);
+
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
 #[error("Key deleted from cache")]
 pub struct DeletedError;
 
 impl KVCache {
     /// Take out all cache from storages.
-    pub fn take(&mut self) -> (BTreeMap<Vec<u8>, Vec<u8>>, HashSet<Vec<u8>>) {
+    pub fn take(&mut self) -> KVCacheCollection {
         (
             std::mem::take(&mut self.storage),
             std::mem::take(&mut self.delete),

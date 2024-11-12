@@ -6,14 +6,9 @@ use crate::signing::handler::MetadataGetter;
 use crate::signing::renderer::amino_renderer::{AminoRenderer, RenderError as AminoRendererError};
 use crate::signing::std_sign_doc;
 use crate::signing::{handler::SignModeHandler, renderer::value_renderer::ValueRenderer};
-use crate::types::auth::gas::Gas;
 use crate::types::base::coin::UnsignedCoin;
 use crate::types::base::coins::UnsignedCoins;
 use crate::types::denom::Denom;
-use crate::types::gas::descriptor::{ANTE_SECKP251K1_DESCRIPTOR, TX_SIZE_DESCRIPTOR};
-use crate::types::gas::kind::TxKind;
-use crate::types::gas::GasMeter;
-use crate::types::store::gas::errors::GasStoreErrors;
 use crate::x::errors::{AnteError, AnteGasError};
 use crate::x::keepers::auth::AuthKeeper;
 use crate::x::keepers::auth::AuthParams;
@@ -29,6 +24,11 @@ use core_types::{
 };
 use cosmwasm_std::Decimal256;
 use database::Database;
+use gas::metering::descriptor::{ANTE_SECKP251K1_DESCRIPTOR, TX_SIZE_DESCRIPTOR};
+use gas::metering::kind::TxKind;
+use gas::metering::GasMeter;
+use gas::store::errors::GasStoreErrors;
+use gas::Gas;
 use kv_store::StoreKey;
 use prost::Message as ProstMessage;
 use std::cell::RefCell;
@@ -562,6 +562,7 @@ impl<
     }
 }
 
+#[derive(Debug)]
 pub struct MetadataFromState<'a, DB, SK, BK, CTX, MK> {
     pub bank_keeper: &'a BK,
     pub ctx: &'a CTX,

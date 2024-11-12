@@ -27,6 +27,7 @@ pub trait Node:
     type ApplicationConfig: ApplicationConfig;
 }
 
+#[derive(Debug)]
 pub struct NodeApplication<
     Core: Node,
     DB: Database,

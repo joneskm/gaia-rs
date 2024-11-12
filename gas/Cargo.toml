@@ -1,0 +1,19 @@
+[package]
+name = "gas"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+core-types = { path = "../core-types" }
+extensions = { path = "../extensions" }
+kv_store = { path = "../kv_store" }
+database = { path = "../database" }
+
+tracing = { workspace = true }
+thiserror = { workspace = true }
+ux = { workspace = true }
+derive_more = { workspace = true, features = ["full"]}
+cosmwasm-std = "2.0.0"
+
+[lints]
+workspace = true

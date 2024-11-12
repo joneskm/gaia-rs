@@ -3,6 +3,7 @@ use kv_store::store::prefix::mutable::MutablePrefixStore;
 
 use super::{parsed::Params, space::ParamsSpace, ParamKind, ParamsDeserialize, ParamsSerialize};
 
+#[derive(Debug)]
 pub struct ParamsSpaceMut<'a, DB> {
     pub(super) inner: MutablePrefixStore<'a, DB>,
 }

@@ -57,7 +57,7 @@ pub enum ClientQueryCommands {
     // SelfConsensusState(self_consensus_state::CliClientParams),
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum ClientQuery {
     ClientParams(QueryClientParamsRequest),
     ClientState(QueryClientStateRequest),

@@ -1,8 +1,8 @@
 use std::{cell::RefCell, sync::Arc};
 
-use crate::types::{
-    auth::gas::Gas,
-    gas::{config::GasConfig, kind::TxKind, GasMeter, GasMeteringErrors},
+use crate::{
+    metering::{config::GasConfig, kind::TxKind, GasMeter, GasMeteringErrors},
+    Gas,
 };
 
 use super::{
@@ -19,7 +19,7 @@ const GUARD_DESC: &str = "GasGuard";
 pub struct GasGuard(pub(super) Arc<RefCell<GasMeter<TxKind>>>);
 
 impl GasGuard {
-    pub(crate) fn new(inner: Arc<RefCell<GasMeter<TxKind>>>) -> Self {
+    pub fn new(inner: Arc<RefCell<GasMeter<TxKind>>>) -> Self {
         Self(inner)
     }
 

@@ -45,7 +45,7 @@ impl From<QueryDenomsMetadataRequest> for inner::QueryDenomsMetadataRequest {
 
 impl Protobuf<inner::QueryDenomsMetadataRequest> for QueryDenomsMetadataRequest {}
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct QueryDenomMetadataRequest {
     /// denom is the coin denom to query metadata for.
     pub denom: Denom,
@@ -84,7 +84,7 @@ pub struct RawQueryDenomMetadataResponse {
     pub metadata: Option<inner::Metadata>,
 }
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 pub struct QueryDenomMetadataResponse {
     /// metadata describes and provides all the client information for the requested token.
     pub metadata: Option<Metadata>,

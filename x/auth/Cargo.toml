@@ -3,6 +3,9 @@ edition = "2021"
 name = "auth"
 version = "0.1.0"
 
+[lints]
+workspace = true
+
 [dependencies]
 #local
 gears = { path = "../../gears", features = ["cli", "xmods", "governance" ] }

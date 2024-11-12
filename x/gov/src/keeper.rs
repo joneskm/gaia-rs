@@ -2,6 +2,7 @@ use std::{collections::HashMap, marker::PhantomData, ops::Mul};
 
 use gears::core::errors::CoreError;
 use gears::extensions::gas::GasResultExt;
+use gears::gas::store::errors::GasStoreErrors;
 use gears::x::keepers::auth::AuthKeeper;
 use gears::{
     application::keepers::params::ParamsKeeper,
@@ -15,7 +16,6 @@ use gears::{
     types::{
         address::{AccAddress, ValAddress},
         decimal256::Decimal256,
-        store::gas::errors::GasStoreErrors,
     },
     x::{
         keepers::{gov::GovernanceBankKeeper, staking::GovStakingKeeper},
@@ -382,16 +382,10 @@ impl<
         proposal_set(ctx, &self.store_key, &proposal)?;
 
         let deposit_params = self.gov_params_keeper.try_get(ctx)?.deposit;
-        let activated_voting_period = match proposal.status {
-            ProposalStatus::DepositPeriod
-                if proposal
-                    .total_deposit
-                    .is_all_gte(Vec::from(deposit_params.min_deposit.clone()).iter()) =>
-            {
-                true
-            }
-            _ => false,
-        };
+
+        let activated_voting_period = matches!(proposal.status, ProposalStatus::DepositPeriod if proposal
+                   .total_deposit
+                   .is_all_gte(Vec::from(deposit_params.min_deposit.clone()).iter()));
 
         let deposit = match deposit_get(ctx, &self.store_key, proposal_id, &depositor)? {
             Some(mut deposit) => {
@@ -741,27 +735,27 @@ impl<
 
         // If there is no staked coins, the proposal fails
         if total_bonded_tokens.amount.is_zero() {
-            return Ok((false, false, tally_results.to_result()));
+            return Ok((false, false, tally_results.into_result()));
         }
 
         // If there is not enough quorum of votes, the proposal fails
         let percent_voting =
             total_voting_power / Decimal256::from_atomics(total_bonded_tokens.amount, 0).unwrap(); // TODO: HANDLE THIS
         if percent_voting < tally_params.quorum {
-            return Ok((false, true, tally_results.to_result()));
+            return Ok((false, true, tally_results.into_result()));
         }
 
         // If no one votes (everyone abstains), proposal fails
         // Why they sub and check to is_zero in cosmos?
         if total_voting_power == *tally_results.get_mut(&VoteOption::Abstain) {
-            return Ok((false, false, tally_results.to_result()));
+            return Ok((false, false, tally_results.into_result()));
         }
 
         // If more than 1/3 of voters veto, proposal fails
         if *tally_results.get_mut(&VoteOption::NoWithVeto) / total_voting_power
             > tally_params.veto_threshold
         {
-            return Ok((false, true, tally_results.to_result()));
+            return Ok((false, true, tally_results.into_result()));
         }
 
         // If more than 1/2 of non-abstaining voters vote Yes, proposal passes
@@ -769,11 +763,11 @@ impl<
             / (total_voting_power - *tally_results.get_mut(&VoteOption::Abstain))
             > tally_params.threshold
         {
-            return Ok((true, false, tally_results.to_result()));
+            return Ok((true, false, tally_results.into_result()));
         }
 
         // If more than 1/2 of non-abstaining voters vote No, proposal fails
-        Ok((false, false, tally_results.to_result()))
+        Ok((false, false, tally_results.into_result()))
     }
 }
 
@@ -797,7 +791,7 @@ impl TallyResultMap {
         self.0.get_mut(k).expect(Self::EXISTS_MSG)
     }
 
-    pub fn to_result(mut self) -> TallyResult {
+    pub fn into_result(mut self) -> TallyResult {
         TallyResult {
             // TODO: is it correct?
             yes: self

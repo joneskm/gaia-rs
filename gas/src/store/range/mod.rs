@@ -1,4 +1,7 @@
-use std::{borrow::Cow, ops::RangeBounds};
+use std::{
+    borrow::Cow,
+    ops::{Bound, RangeBounds},
+};
 
 use database::Database;
 use infallible::RangeIter;
@@ -7,6 +10,8 @@ use kv_store::{range::Range, store::prefix::range::PrefixRange};
 use super::{errors::GasStoreErrors, guard::GasGuard};
 
 pub mod infallible;
+
+pub type VectoredGasRange<'a, DB> = GasRange<'a, DB, Vec<u8>, (Bound<Vec<u8>>, Bound<Vec<u8>>)>;
 
 #[derive(Debug)]
 enum RangeBackend<'a, DB, RB, R> {

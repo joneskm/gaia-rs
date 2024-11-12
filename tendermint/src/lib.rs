@@ -1,3 +1,5 @@
+#![allow(missing_docs)]
+
 use error::Error;
 use std::{fs::File, io::Write, path::PathBuf, time::Duration};
 use tendermint_config::{

@@ -26,6 +26,7 @@ use crate::{
 use super::keys::{GearsPublicKey, ReadAccAddress, SigningKey};
 
 /// Contains info required to sign a Tx
+#[derive(Debug)]
 pub struct SigningInfo<'a, K> {
     pub key: &'a K,
     pub sequence: u64,
@@ -33,7 +34,7 @@ pub struct SigningInfo<'a, K> {
 }
 
 pub fn create_signed_transaction_direct<M: TxMessage, K: SigningKey + GearsPublicKey>(
-    signing_infos: Vec<SigningInfo<K>>,
+    signing_infos: Vec<SigningInfo<'_, K>>,
     chain_id: ChainId,
     fee: Fee,
     tip: Option<Tip>,
@@ -89,7 +90,7 @@ pub fn create_signed_transaction_textual<
     K: SigningKey + ReadAccAddress + GearsPublicKey,
     F: NodeFetcher + Clone,
 >(
-    signing_infos: Vec<SigningInfo<K>>,
+    signing_infos: Vec<SigningInfo<'_, K>>,
     chain_id: ChainId,
     fee: Fee,
     tip: Option<Tip>,
@@ -154,7 +155,7 @@ impl From<Mode> for SignMode {
 }
 
 fn auth_info<K: GearsPublicKey>(
-    signing_infos: &Vec<SigningInfo<K>>,
+    signing_infos: &[SigningInfo<'_, K>],
     fee: Fee,
     tip: Option<Tip>,
     mode: Mode,

@@ -119,49 +119,49 @@ mod tests {
     #[test]
     fn from_string_failures() {
         // too short
-        let res: Result<Denom, DenomError> = "a".to_string().try_into();
+        let res: Result<Denom, DenomError> = "a".to_owned().try_into();
         let err = res.unwrap_err();
         assert_eq!(err, DenomError);
 
         // starts with a number
-        let res: Result<Denom, DenomError> = "8aaaaaaaaaaa".to_string().try_into();
+        let res: Result<Denom, DenomError> = "8aaaaaaaaaaa".to_owned().try_into();
         let err = res.unwrap_err();
         assert_eq!(err, DenomError);
 
         // too long
-        let res: Result<Denom, DenomError> = "abcdefghijklmnopqrstuvwxyzxxxxxxxxxxabcdefghijklmnopqrstuvwxyzxxxxxxxxxxabcdefghijklmnopqrstuvwxyzxxxxxxxxxx123456789012345678901".to_string().try_into();
+        let res: Result<Denom, DenomError> = "abcdefghijklmnopqrstuvwxyzxxxxxxxxxxabcdefghijklmnopqrstuvwxyzxxxxxxxxxxabcdefghijklmnopqrstuvwxyzxxxxxxxxxx123456789012345678901".to_owned().try_into();
         let err = res.unwrap_err();
         assert_eq!(err, DenomError);
 
         // non alpha numeric character
-        let res: Result<Denom, DenomError> = "ab🙂cd".to_string().try_into();
+        let res: Result<Denom, DenomError> = "ab🙂cd".to_owned().try_into();
         let err = res.unwrap_err();
         assert_eq!(err, DenomError);
 
         // non alpha numeric characters
-        let res: Result<Denom, DenomError> = "     ".to_string().try_into();
+        let res: Result<Denom, DenomError> = "     ".to_owned().try_into();
         let err = res.unwrap_err();
         assert_eq!(err, DenomError);
 
         // non alpha numeric characters
-        let res: Result<Denom, DenomError> = "sdsdsd dsdsd".to_string().try_into();
+        let res: Result<Denom, DenomError> = "sdsdsd dsdsd".to_owned().try_into();
         let err = res.unwrap_err();
         assert_eq!(err, DenomError);
     }
 
     #[test]
     fn to_string_success() {
-        let denom: Denom = "atom".to_string().try_into().unwrap_test();
+        let denom: Denom = "atom".to_owned().try_into().unwrap_test();
         assert_eq!("atom", denom.to_string());
     }
 
     #[test]
     fn serialize_success() {
-        let res: Denom = "abcd".to_string().try_into().unwrap_test();
+        let res: Denom = "abcd".to_owned().try_into().unwrap_test();
 
         assert_eq!(
             serde_json::to_string(&res).unwrap_test(),
-            r#""abcd""#.to_string()
+            r#""abcd""#.to_owned()
         );
     }
 }

@@ -1,6 +1,6 @@
 use gears::{
-    tendermint::informal::hash::Hash,
-    types::{address::ConsAddress, store::gas::errors::GasStoreErrors},
+    gas::store::errors::GasStoreErrors, tendermint::informal::hash::Hash,
+    types::address::ConsAddress,
 };
 
 #[derive(Debug, thiserror::Error)]

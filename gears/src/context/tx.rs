@@ -1,6 +1,16 @@
 use std::{cell::RefCell, sync::Arc};
 
 use database::{prefix::PrefixDB, Database};
+use gas::{
+    metering::{
+        kind::{BlockKind, TxKind},
+        GasMeter,
+    },
+    store::{
+        guard::GasGuard,
+        kv::{mutable::GasKVStoreMut, GasKVStore},
+    },
+};
 use kv_store::{
     bank::multi::TransactionMultiBank,
     store::multi::{immutable::MultiStore, mutable::MultiStoreMut},
@@ -14,19 +24,7 @@ use tendermint::types::{
 
 use crate::{
     baseapp::{options::NodeOptions, ConsensusParams},
-    types::{
-        gas::{
-            kind::{BlockKind, TxKind},
-            GasMeter,
-        },
-        store::{
-            gas::{
-                guard::GasGuard,
-                kv::{mutable::GasKVStoreMut, GasKVStore},
-            },
-            kv::{mutable::StoreMut, Store},
-        },
-    },
+    types::store::kv::{mutable::StoreMut, Store},
 };
 
 use super::{QueryableContext, TransactionalContext};

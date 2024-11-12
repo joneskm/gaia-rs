@@ -686,7 +686,7 @@ impl TryFrom<Vec<Validator>> for Validators {
 }
 
 impl Validators {
-    fn validate_validators(validators: &Vec<Validator>) -> Result<(), ValidatorsError> {
+    fn validate_validators(validators: &[Validator]) -> Result<(), ValidatorsError> {
         let mut addr_set: HashSet<&[u8]> = HashSet::new();
         for v in validators.iter() {
             let cons_pub_key_raw = v.consensus_pubkey.raw();

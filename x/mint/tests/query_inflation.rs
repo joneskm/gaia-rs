@@ -130,14 +130,11 @@ fn query_inflation_after_month() {
             .unwrap_test();
     }
 
-    match &mut *total_supply.acquire_write() {
-        Some(supply) => {
-            supply.amount = supply
-                .amount
-                .checked_add(Uint256::from(10000000000000000_u64))
-                .unwrap_test();
-        }
-        None => (),
+    if let Some(supply) = &mut *total_supply.acquire_write() {
+        supply.amount = supply
+            .amount
+            .checked_add(Uint256::from(10000000000000000_u64))
+            .unwrap_test();
     };
 
     let _ = node.step(

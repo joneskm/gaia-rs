@@ -7,12 +7,13 @@ use gears::{
     context::{InfallibleContext, InfallibleContextMut, QueryableContext, TransactionalContext},
     core::Protobuf,
     extensions::corruption::UnwrapCorrupt,
+    gas::store::errors::GasStoreErrors,
     params::{
         gas, infallible_subspace, infallible_subspace_mut, ParamKind, ParamsDeserialize,
         ParamsSerialize, ParamsSubspaceKey,
     },
     store::{database::Database, StoreKey},
-    types::{decimal256::Decimal256, errors::StdError, store::gas::errors::GasStoreErrors},
+    types::{decimal256::Decimal256, errors::StdError},
 };
 use prost::Message;
 use serde::{Deserialize, Serialize};

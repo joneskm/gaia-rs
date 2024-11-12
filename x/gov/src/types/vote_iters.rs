@@ -1,16 +1,15 @@
-use std::{borrow::Cow, ops::Bound};
+use std::borrow::Cow;
 
 use gears::{
+    gas::store::errors::GasStoreErrors,
     store::database::Database,
-    types::store::{gas::errors::GasStoreErrors, kv::Store, range::StoreRange},
+    types::store::{kv::Store, range::VectoredStoreRange},
 };
 
 use crate::{errors::SERDE_JSON_CONVERSION, msg::weighted_vote::MsgVoteWeighted};
 
 #[derive(Debug)]
-pub struct WeightedVoteIterator<'a, DB>(
-    StoreRange<'a, DB, Vec<u8>, (Bound<Vec<u8>>, Bound<Vec<u8>>)>,
-);
+pub struct WeightedVoteIterator<'a, DB>(VectoredStoreRange<'a, DB>);
 
 impl<'a, DB: Database> WeightedVoteIterator<'a, DB> {
     pub fn new(store: Store<'a, DB>, proposal_id: u64) -> WeightedVoteIterator<'a, DB> {

@@ -26,14 +26,14 @@ pub struct ABCIHandler<
     keeper: Keeper<SK, PSK, SSK, M>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum SlashingNodeQueryRequest {
     // TODO: check option to change signature of methods and implement typed queries
     // SigningInfo(QuerySigningInfoRequest),
     SigningInfos(QuerySigningInfosRequest),
     Params(QueryParamsRequest),
 }
-#[derive(Clone, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 pub enum SlashingNodeQueryResponse {
     // SigningInfo(QuerySigningInfoResponse),
     SigningInfos(QuerySigningInfosResponse),

@@ -70,7 +70,7 @@ pub trait ABCIHandler: Clone + Send + Sync + 'static {
     ) -> Result<(), TxError>;
 
     #[allow(unused_variables)]
-    fn begin_block<'a, DB: Database>(
+    fn begin_block<DB: Database>(
         &self,
         ctx: &mut BlockContext<'_, DB, Self::StoreKey>,
         request: RequestBeginBlock,
@@ -78,7 +78,7 @@ pub trait ABCIHandler: Clone + Send + Sync + 'static {
     }
 
     #[allow(unused_variables)]
-    fn end_block<'a, DB: Database>(
+    fn end_block<DB: Database>(
         &self,
         ctx: &mut BlockContext<'_, DB, Self::StoreKey>,
         request: RequestEndBlock,

@@ -14,13 +14,10 @@ use std::marker::PhantomData;
 
 use self::kind::MeterKind;
 
-#[no_link]
-extern crate derive_more;
-
 use infinite_meter::InfiniteGasMeter;
 use tracing::debug;
 
-pub type FiniteGas = super::auth::gas::Gas;
+pub type FiniteGas = crate::Gas;
 
 #[derive(Debug, Clone, Eq, PartialEq, thiserror::Error)]
 pub enum GasMeteringErrors {

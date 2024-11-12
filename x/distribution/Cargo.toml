@@ -3,6 +3,9 @@ edition = "2021"
 name = "distribution"
 version = "0.1.0"
 
+[lints]
+workspace = true
+
 [dependencies]
 anyhow = { workspace = true }
 axum = { workspace = true }

@@ -8,7 +8,7 @@ use ibc::core::client::types::error::ClientError;
 use ibc::derive::ConsensusState;
 use ibc::primitives::proto::Any;
 
-#[derive(ConsensusState, Clone, From, TryInto)]
+#[derive(ConsensusState, Debug, Clone, From, TryInto)]
 pub enum ConsensusState {
     Tendermint(TmConsensusState),
 }

@@ -22,7 +22,7 @@ impl<DB: Database, R: RangeBounds<RB>, RB: AsRef<[u8]>> Range<'_, DB, RB, R> {
             Bound::Unbounded => true,
         };
 
-        match *node {
+        match node {
             Node::Leaf(leaf) => {
                 if after_start && before_end {
                     return Some((leaf.key, leaf.value));
@@ -38,7 +38,7 @@ impl<DB: Database, R: RangeBounds<RB>, RB: AsRef<[u8]>> Range<'_, DB, RB, R> {
                             .expect("node db should contain all nodes"),
                     };
 
-                    self.delayed_nodes_rev.push(left_node)
+                    self.delayed_nodes_rev.push(*left_node)
                 }
 
                 if before_end {
@@ -50,7 +50,7 @@ impl<DB: Database, R: RangeBounds<RB>, RB: AsRef<[u8]>> Range<'_, DB, RB, R> {
                             .expect("node db should contain all nodes"),
                     };
 
-                    self.delayed_nodes_rev.push(right_node)
+                    self.delayed_nodes_rev.push(*right_node)
                 }
             }
         }

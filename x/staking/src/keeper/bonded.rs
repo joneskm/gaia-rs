@@ -1,5 +1,5 @@
 use super::*;
-use gears::types::{base::coins::UnsignedCoins, store::gas::errors::GasStoreErrors};
+use gears::types::base::coins::UnsignedCoins;
 
 impl<
         SK: StoreKey,

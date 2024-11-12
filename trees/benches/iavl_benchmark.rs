@@ -1,3 +1,5 @@
+#![allow(missing_docs)]
+
 #[cfg(feature = "bench")]
 use bench::*;
 #[cfg(feature = "bench")]

@@ -1,10 +1,11 @@
 use std::fmt::Debug;
 
+use gas::store::errors::GasStoreErrors;
 use kv_store::StoreKey;
 
 use crate::{
     context::{QueryableContext, TransactionalContext},
-    types::{account::Account, store::gas::errors::GasStoreErrors},
+    types::account::Account,
     x::{
         keepers::auth::{AuthKeeper, AuthParams},
         module::Module,

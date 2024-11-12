@@ -63,6 +63,7 @@ impl TxMessage for NullTxMsg {
 }
 
 /// Utility type that guarantees correctness of transaction messages set
+#[derive(Debug)]
 pub struct Messages<T: TxMessage> {
     messages: Vec1<T>,
     /// A number of messages in the transaction. Zero means unlimited number of messages.

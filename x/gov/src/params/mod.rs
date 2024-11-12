@@ -111,24 +111,20 @@ impl ParamsSerialize for GovParams {
     }
 
     fn to_raw(&self) -> Vec<(&'static str, Vec<u8>)> {
-        let mut map = Vec::new();
-
-        map.push((
-            KEY_DEPOSIT_PARAMS,
-            serde_json::to_vec(&self.deposit).expect(SERDE_JSON_CONVERSION),
-        ));
-
-        map.push((
-            KEY_VOTING_PARAMS,
-            serde_json::to_vec(&self.voting).expect(SERDE_JSON_CONVERSION),
-        ));
-
-        map.push((
-            KEY_TALLY_PARAMS,
-            serde_json::to_vec(&self.tally).expect(SERDE_JSON_CONVERSION),
-        ));
-
-        map
+        vec![
+            (
+                KEY_DEPOSIT_PARAMS,
+                serde_json::to_vec(&self.deposit).expect(SERDE_JSON_CONVERSION),
+            ),
+            (
+                KEY_VOTING_PARAMS,
+                serde_json::to_vec(&self.voting).expect(SERDE_JSON_CONVERSION),
+            ),
+            (
+                KEY_TALLY_PARAMS,
+                serde_json::to_vec(&self.tally).expect(SERDE_JSON_CONVERSION),
+            ),
+        ]
     }
 }
 

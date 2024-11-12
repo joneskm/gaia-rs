@@ -30,7 +30,7 @@ impl<
         Ok(())
     }
 
-      fn send_coins_from_account_to_account<DB: Database, CTX: TransactionalContext<DB, SK>>(
+    fn send_coins_from_account_to_account<DB: Database, CTX: TransactionalContext<DB, SK>>(
         &self,
         ctx: &mut CTX,
         msg: &MsgSend,

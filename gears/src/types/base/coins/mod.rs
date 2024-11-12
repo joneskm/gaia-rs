@@ -20,7 +20,7 @@ use super::{
 };
 use crate::types::denom::Denom;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct CoinsRaw<U>(Vec<U>);
 
 impl<T: ZeroNumeric, U: Coin<Amount = T>> From<Coins<T, U>> for CoinsRaw<U> {

@@ -2,9 +2,10 @@ use std::{borrow::Cow, marker::PhantomData, ops::Bound};
 
 use chrono::{DateTime, Utc};
 use gears::{
+    gas::store::errors::GasStoreErrors,
     store::database::Database,
     tendermint::types::time::timestamp::Timestamp,
-    types::store::{gas::errors::GasStoreErrors, kv::Store, range::StoreRange},
+    types::store::{kv::Store, range::VectoredStoreRange},
 };
 
 use crate::proposal::Proposal;
@@ -12,10 +13,7 @@ use crate::proposal::Proposal;
 use super::{parse_proposal_key_bytes, ProposalModel};
 
 #[derive(Debug)]
-pub struct InactiveProposalIterator<'a, DB, P>(
-    StoreRange<'a, DB, Vec<u8>, (Bound<Vec<u8>>, Bound<Vec<u8>>)>,
-    PhantomData<P>,
-);
+pub struct InactiveProposalIterator<'a, DB, P>(VectoredStoreRange<'a, DB>, PhantomData<P>);
 
 impl<'a, DB: Database, P: Proposal> InactiveProposalIterator<'a, DB, P> {
     pub fn new(store: Store<'a, DB>, end_time: &Timestamp) -> InactiveProposalIterator<'a, DB, P> {

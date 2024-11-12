@@ -1,8 +1,9 @@
 use cosmwasm_std::Uint256;
+use gas::store::errors::GasStoreErrors;
 use kv_store::StoreKey;
 
 use crate::{
-    types::{base::coin::UnsignedCoin, store::gas::errors::GasStoreErrors},
+    types::base::coin::UnsignedCoin,
     x::{keepers::gov::GovernanceBankKeeper, module::Module},
 };
 

@@ -1,11 +1,8 @@
 use gears::{
-    error::NumericError,
-    types::{
+    error::NumericError, gas::store::errors::GasStoreErrors, types::{
         address::{AccAddress, ValAddress},
         base::errors::CoinsError,
-        store::gas::errors::GasStoreErrors,
-    },
-    x::errors::{AccountNotFound, BankKeeperError},
+    }, x::errors::{AccountNotFound, BankKeeperError}
 };
 
 #[derive(Debug, Clone, thiserror::Error)]

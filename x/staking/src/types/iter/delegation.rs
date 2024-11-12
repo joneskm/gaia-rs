@@ -2,18 +2,17 @@ use crate::{consts::keeper::DELEGATION_KEY, Delegation};
 use gears::{
     core::Protobuf,
     extensions::corruption::UnwrapCorrupt,
+    gas::store::errors::GasStoreErrors,
     store::database::Database,
     types::{
         address::AccAddress,
-        store::{gas::errors::GasStoreErrors, kv::Store, range::StoreRange},
+        store::{kv::Store, range::VectoredStoreRange},
     },
 };
-use std::{borrow::Cow, ops::Bound};
+use std::borrow::Cow;
 
 #[derive(Debug)]
-pub struct DelegationIterator<'a, DB>(
-    StoreRange<'a, DB, Vec<u8>, (Bound<Vec<u8>>, Bound<Vec<u8>>)>,
-);
+pub struct DelegationIterator<'a, DB>(VectoredStoreRange<'a, DB>);
 
 impl<'a, DB: Database> DelegationIterator<'a, DB> {
     pub fn new(store: Store<'a, DB>, address: &AccAddress) -> DelegationIterator<'a, DB> {

@@ -78,7 +78,7 @@ impl<M: TxMessage> TryFrom<RawQueryTxsResponse> for QueryTxsResponse<M> {
 
 impl<M: TxMessage> Protobuf<RawQueryTxsResponse> for QueryTxsResponse<M> {}
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct QueryGetTxRequest {
     pub hash: Hash,
 }
@@ -113,7 +113,7 @@ impl TryFrom<inner::GetTxRequest> for QueryGetTxRequest {
 
 impl Protobuf<inner::GetTxRequest> for QueryGetTxRequest {}
 
-#[derive(Clone, PartialEq, Raw, protobuf_derive::Protobuf)]
+#[derive(Clone, Debug, PartialEq, Raw, protobuf_derive::Protobuf)]
 #[proto(gears)]
 pub struct QueryGetTxsEventRequest {
     #[raw(raw = String, kind(string), repeated)]

@@ -1,6 +1,8 @@
+//! Implementation of KV Store for storing data during transaction
+
 use std::{
     borrow::Cow,
-    collections::{BTreeMap, HashMap, HashSet},
+    collections::HashMap,
     ops::RangeBounds,
     sync::{Arc, RwLock},
 };
@@ -9,7 +11,7 @@ use database::Database;
 use trees::iavl::Tree;
 
 use crate::{
-    cache::KVCache,
+    cache::{KVCache, KVCacheCollection},
     error::POISONED_LOCK,
     range::Range,
     store::{
@@ -21,6 +23,11 @@ use crate::{
 
 use super::application::ApplicationKVBank;
 
+/// Store used during processing of transactions.
+/// In current implementation it contains 2 layers of cache before ~~commit~~
+/// (this store couldn't commit changes to and instead cache should be taken and put into application).
+/// which contains tx layer which get cleared if processing tx fails and block which contains cache of all
+/// successful transactions.
 #[derive(Debug)]
 pub struct TransactionKVBank<DB> {
     pub(crate) persistent: Arc<RwLock<Tree<DB>>>,
@@ -31,7 +38,7 @@ pub struct TransactionKVBank<DB> {
 impl<DB: Database> TransactionKVBank<DB> {
     /// Read persistent database
     #[inline]
-    fn persistent(&self) -> std::sync::RwLockReadGuard<Tree<DB>> {
+    fn persistent(&self) -> std::sync::RwLockReadGuard<'_, Tree<DB>> {
         self.persistent.read().expect(POISONED_LOCK)
     }
 
@@ -61,7 +68,8 @@ impl<DB: Database> TransactionKVBank<DB> {
         }
     }
 
-    pub fn take_block_cache(&mut self) -> (BTreeMap<Vec<u8>, Vec<u8>>, HashSet<Vec<u8>>) {
+    /// Take(leaving empty) cache from block layer
+    pub fn take_block_cache(&mut self) -> KVCacheCollection {
         self.block.take()
     }
 
@@ -84,6 +92,10 @@ impl<DB: Database> TransactionKVBank<DB> {
         self.tx.set(key, value)
     }
 
+    /// Clone changes from [ApplicationKVBank].
+    /// This fn should be used in case changes made in application layer or [ApplicationKVBank].
+    /// This is not efficient, but solved problem with cache sync without
+    /// complicated relations between application and transaction layers of application.
     pub fn append_block_cache(&mut self, other: &mut ApplicationKVBank<DB>) {
         let (append, delete) = (other.cache.storage.clone(), other.cache.delete.clone());
 
@@ -95,6 +107,10 @@ impl<DB: Database> TransactionKVBank<DB> {
         }
     }
 
+    /// Return value of key from cache of persisted db.
+    /// Value from tx layer overwrites block values.
+    ///
+    /// *Note*: value will be fetched in db only if no values found in both layers
     pub fn get<R: AsRef<[u8]> + ?Sized>(&self, k: &R) -> Option<Vec<u8>> {
         match self.tx.get(k.as_ref()).ok()? {
             Some(var) => Some(var.to_owned()),
@@ -107,6 +123,7 @@ impl<DB: Database> TransactionKVBank<DB> {
         }
     }
 
+    /// Return store which uses prefix for all store methods
     pub fn prefix_store<I: IntoIterator<Item = u8>>(
         &self,
         prefix: I,
@@ -117,6 +134,7 @@ impl<DB: Database> TransactionKVBank<DB> {
         }
     }
 
+    /// Return store which uses prefix for all store methods
     pub fn prefix_store_mut<I: IntoIterator<Item = u8>>(
         &mut self,
         prefix: I,
@@ -127,6 +145,7 @@ impl<DB: Database> TransactionKVBank<DB> {
         }
     }
 
+    /// Return range which iterates over values in tree and cache without cloning cache values
     pub fn range<R: RangeBounds<Vec<u8>> + Clone>(&self, range: R) -> Range<'_, DB, Vec<u8>, R> {
         let cached_values = self
             .block

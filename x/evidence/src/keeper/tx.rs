@@ -21,7 +21,7 @@ where
     /// submit_evidence implements the MsgServer.SubmitEvidence method.
     pub fn submit_evidence_cmd<DB: Database>(
         &self,
-        ctx: &mut TxContext<DB, SK>,
+        ctx: &mut TxContext<'_, DB, SK>,
         msg: &MsgSubmitEvidence,
     ) -> Result<(), TxEvidenceError> {
         let evidence: E = msg.evidence.clone().try_into().map_err(|_| DecodeError)?;
@@ -52,11 +52,11 @@ where
     /// persisted.
     pub fn submit_evidence<DB: Database>(
         &self,
-        ctx: &mut TxContext<DB, SK>,
+        ctx: &mut TxContext<'_, DB, SK>,
         evidence: &E,
     ) -> Result<(), TxEvidenceError> {
         if self
-            .evidence::<TxContext<DB, SK>, DB, E>(ctx, evidence.hash())?
+            .evidence::<TxContext<'_, DB, SK>, DB, E>(ctx, evidence.hash())?
             .is_some()
         {
             return Err(TxEvidenceError::AlreadyExists(EvidenceAlreadyExistsError(

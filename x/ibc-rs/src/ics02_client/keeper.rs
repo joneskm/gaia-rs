@@ -1,9 +1,9 @@
 use gears::context::init::InitContext;
 use gears::context::query::QueryContext;
+use gears::gas::store::errors::GasStoreErrors;
 use gears::params::ParamsSubspaceKey;
 use gears::store::database::prefix::PrefixDB;
 use gears::store::store::prefix::mutable::MutablePrefixStore;
-use gears::types::store::gas::errors::GasStoreErrors;
 use gears::types::store::prefix::mutable::PrefixStoreMut;
 use gears::{
     context::QueryableContext,

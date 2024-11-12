@@ -42,6 +42,7 @@ const ACCOUNTS_LIST  : [(&str, &str, &str); 11] =  [
     ("alice9", "cosmos19k5n7f35e4tskjcm2peujta0e3rvszmmzlhjej", "moon meat day town sugar matrix coffee lamp metal output fever document crush forum noise pear question cycle surprise wasp enough achieve initial shop"),
 ];
 
+#[derive(Debug)]
 pub struct GaiaNode {
     tendermint: TendermintSubprocess,
     gaia_handler: std::thread::JoinHandle<()>,

@@ -2,14 +2,14 @@ use serde::{Deserialize, Serialize};
 use tendermint::types::proto::p2p::DefaultNodeInfo;
 
 /// GetNodeInfoResponse is the response type for the Query/GetNodeInfo RPC method.
-#[derive(Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct GetNodeInfoResponse {
     pub default_node_info: Option<DefaultNodeInfo>,
     pub application_version: Option<VersionInfo>,
 }
 
 /// VersionInfo is the type for the GetNodeInfoResponse message.
-#[derive(Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct VersionInfo {
     pub name: String,
     pub app_name: String,
@@ -24,7 +24,7 @@ pub struct VersionInfo {
 }
 
 /// Module is the type for VersionInfo
-#[derive(Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct Module {
     /// module path
     pub path: String,

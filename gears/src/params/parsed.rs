@@ -72,16 +72,6 @@ impl Params {
     }
 
     pub fn is_valid(&self) -> bool {
-        match self {
-            Params::InvalidCast(_) => false,
-            _ => true,
-        }
-    }
-
-    pub fn is_invalid(&self) -> bool {
-        match self {
-            Params::InvalidCast(_) => true,
-            _ => false,
-        }
+        matches!(self, Params::InvalidCast(_))
     }
 }

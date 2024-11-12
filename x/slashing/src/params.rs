@@ -3,6 +3,7 @@ use gears::{
     context::{InfallibleContext, InfallibleContextMut, QueryableContext, TransactionalContext},
     core::{serializers::serialize_number_to_string, Protobuf},
     extensions::corruption::UnwrapCorrupt,
+    gas::store::errors::GasStoreErrors,
     params::{
         gas, infallible_subspace, infallible_subspace_mut, ParamKind, ParamsDeserialize,
         ParamsSerialize, ParamsSubspaceKey,
@@ -11,7 +12,6 @@ use gears::{
     types::{
         decimal256::{Decimal256, PRECISION_REUSE},
         errors::StdError,
-        store::gas::errors::GasStoreErrors,
         uint::Uint256,
     },
 };

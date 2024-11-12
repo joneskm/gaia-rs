@@ -1,3 +1,6 @@
+//! Macros to simplify creation of `SocketAddr`
+
+/// Macros to simplify creation of `SocketAddr`
 #[macro_export]
 macro_rules! socket_addr {
     ($a:expr, $b:expr, $c:expr, $d:expr , $port:expr) => {

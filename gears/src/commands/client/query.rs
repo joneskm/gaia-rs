@@ -17,6 +17,7 @@ pub struct QueryCommand<C> {
     pub inner: C,
 }
 
+/// Execute query
 pub fn run_query<Q, QC, QR, H>(
     QueryCommand {
         node,
@@ -36,7 +37,12 @@ where
     Ok(response)
 }
 
-/// Convenience method for running queries
+/// Convenience method for running queries.
+/// After execution `Raw` will be serialized as protobuf
+/// message and parsed to your `Response`.
+///
+/// This allows to omit [Default] bound on query structure and
+/// single way to do a validation with prost crate
 pub fn execute_query<
     Response: std::convert::TryFrom<Raw>,
     Raw: Message + Default + std::convert::From<Response>,

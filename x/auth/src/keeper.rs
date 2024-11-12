@@ -3,6 +3,7 @@ use crate::{AuthParamsKeeper, AuthsParams};
 use bytes::Bytes;
 use gears::context::init::InitContext;
 use gears::extensions::gas::GasResultExt;
+use gears::gas::store::errors::GasStoreErrors;
 use prost::Message;
 
 use gears::application::keepers::params::ParamsKeeper;
@@ -16,13 +17,12 @@ use gears::store::database::Database;
 use gears::store::StoreKey;
 use gears::types::account::{Account, BaseAccount, ModuleAccount};
 use gears::types::address::AccAddress;
-use gears::types::store::gas::errors::GasStoreErrors;
 use gears::x::keepers::auth::AuthKeeper;
 use gears::x::module::Module;
 
 const ACCOUNT_STORE_PREFIX: [u8; 1] = [1];
 const GLOBAL_ACCOUNT_NUMBER_KEY: [u8; 19] = [
-    103, 108, 111, 098, 097, 108, 065, 099, 099, 111, 117, 110, 116, 078, 117, 109, 098, 101, 114,
+    103, 108, 111, 98, 97, 108, 65, 99, 99, 111, 117, 110, 116, 78, 117, 109, 98, 101, 114,
 ]; // "globalAccountNumber"
 
 #[derive(Debug, Clone)]

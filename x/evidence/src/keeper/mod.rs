@@ -1,12 +1,12 @@
 use crate::{errors::EvidenceAlreadyExistsError, types::Evidence, GenesisState};
 use gears::extensions::gas::GasResultExt;
+use gears::gas::store::errors::GasStoreErrors;
 use gears::{
     context::{init::InitContext, QueryableContext, TransactionalContext},
     core::any::google::Any,
     extensions::corruption::UnwrapCorrupt,
     store::{database::Database, StoreKey},
     tendermint::informal::hash::Hash,
-    types::store::gas::errors::GasStoreErrors,
     x::{
         keepers::{slashing::EvidenceSlashingKeeper, staking::SlashingStakingKeeper},
         module::Module,
@@ -77,7 +77,7 @@ where
     ) -> Result<(), EvidenceAlreadyExistsError> {
         for e in genesis.evidence {
             if self
-                .evidence::<InitContext<DB, SK>, DB, E>(ctx, e.hash())
+                .evidence::<InitContext<'_, DB, SK>, DB, E>(ctx, e.hash())
                 .unwrap_gas()
                 .is_some()
             {

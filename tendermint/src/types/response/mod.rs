@@ -40,7 +40,7 @@ impl From<ResponseFlush> for inner::ResponseFlush {
         Self {}
     }
 }
-#[derive(Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct ResponseCommit {
     /// reserve 1
     pub data: ::prost::bytes::Bytes,

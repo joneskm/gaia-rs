@@ -1,3 +1,5 @@
+use std::num::NonZero;
+
 use database::Database;
 use kv_store::query::QueryMultiStore;
 use serde::Serialize;
@@ -11,13 +13,19 @@ use crate::{
 
 use super::{errors::QueryError, BaseApp};
 
-/// Return url which could be used to query this... query
+/// Trait represents some query which should know how to query itself
+/// and serialize into bytes.
+///
+/// Note: this trait doesn't have bound to protobuf so you may serialize it as you wish,
+/// but design geared towards protobuf
 pub trait Query {
+    /// Return url which could be used to query this... query
     fn query_url(&self) -> &'static str;
     fn into_bytes(self) -> Vec<u8>;
 }
 
 pub trait QueryRequest: Clone + Send + Sync + 'static {
+    // TODO: this is probably a mistake and needs to be edited
     fn height(&self) -> u32;
 }
 
@@ -37,7 +45,10 @@ impl<DB: Database, PSK: ParamsSubspaceKey, H: ABCIHandler, AI: ApplicationInfo>
         let version = request.height();
 
         let store = self.multi_store.read().expect(POISONED_LOCK);
-        let ctx = QueryContext::new(QueryMultiStore::new(&*store, version)?, version)?;
+        let ctx = QueryContext::new(
+            QueryMultiStore::new(&*store, NonZero::new(version))?,
+            version,
+        )?;
         Ok(self.abci_handler.typed_query(&ctx, request))
     }
 }

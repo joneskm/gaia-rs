@@ -38,7 +38,7 @@ mod tests {
 
         let mut buf = Vec::new();
 
-        var.encode(&mut buf).expect("Failed to write buffer");
+        var.encode(&mut buf).unwrap_test();
 
         let hex = data_encoding::HEXLOWER.encode(&buf);
 
@@ -58,9 +58,9 @@ mod tests {
         let canonical_key: CanonicalValue = key.into();
         final_map.insert(canonical_key, 2);
 
-        let key = Value::Integer(Integer::from(-1));
-        let canonical_key: CanonicalValue = key.into();
-        final_map.insert(canonical_key, 3);
+        let value = Value::Integer(Integer::from(-1));
+        let canonical_value: CanonicalValue = value.into();
+        final_map.insert(canonical_value, 3);
 
         let mut bytes = Vec::new();
         ciborium::into_writer(&final_map, &mut bytes).unwrap_test();

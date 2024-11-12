@@ -1,4 +1,7 @@
 use database::Database;
+use gas::metering::{
+    basic_meter::BasicGasMeter, infinite_meter::InfiniteGasMeter, kind::BlockKind, Gas, GasMeter,
+};
 use kv_store::bank::multi::TransactionMultiBank;
 use tendermint::types::proto::event::Event;
 
@@ -7,15 +10,15 @@ use crate::{
     application::handlers::node::ABCIHandler,
     baseapp::errors::RunTxError,
     context::{tx::TxContext, TransactionalContext},
-    types::{
-        gas::{
-            basic_meter::BasicGasMeter, infinite_meter::InfiniteGasMeter, kind::BlockKind, Gas,
-            GasMeter,
-        },
-        tx::raw::TxWithRaw,
-    },
+    types::tx::raw::TxWithRaw,
 };
 
+/// Specific to `check_tx` ABCI method.
+///
+/// Mode to validate a transaction before letting
+/// them into local mempool. This mode doesn't execute a
+/// transaction only runs ante checks on them.
+/// Performs gas metering too
 #[derive(Debug)]
 pub struct CheckTxMode<DB, AH: ABCIHandler> {
     pub(crate) block_gas_meter: GasMeter<BlockKind>,

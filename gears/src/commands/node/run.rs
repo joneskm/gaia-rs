@@ -81,6 +81,9 @@ pub trait RouterBuilder<QReq, QRes> {
     ) -> tonic::transport::server::Router<Identity>;
 }
 
+/// Start your node
+///
+/// *Note*: tendermint should be started manually
 pub fn run<
     DB: Database,
     DBO: DatabaseBuilder<DB>,

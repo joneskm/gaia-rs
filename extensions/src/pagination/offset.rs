@@ -2,11 +2,15 @@ use itertools::Itertools;
 
 use super::{PaginationResultElement, TwoIterators};
 
+/// Result of pagination by offset
 pub type PaginationByOffsetResult<T> = PaginationResultElement<T>;
 
+/// Struct to paginate over offset
 #[derive(Debug, Clone)]
 pub struct PaginationByOffset {
+    /// offset to start iteration
     pub offset: usize,
+    /// max amount of items
     pub limit: usize,
 }
 
@@ -16,9 +20,12 @@ impl From<(usize, usize)> for PaginationByOffset {
     }
 }
 
+/// Trait which contains methods to paginate by offset
 pub trait IteratorPaginateByOffset {
+    /// Item in iterator
     type Item;
 
+    /// Paginate by offset and get result of pagination which contains information about next offset
     fn paginate_by_offset(
         self,
         pagination: impl Into<PaginationByOffset>,
@@ -27,6 +34,8 @@ pub trait IteratorPaginateByOffset {
         impl Iterator<Item = Self::Item>,
     );
 
+    /// Same as [IteratorPaginateByOffset::paginate_by_offset], but accept optional pagination.
+    /// Useful when user could set pagination, but by default it's `None`
     fn maybe_paginate_by_offset<P: Into<PaginationByOffset>>(
         self,
         pagination: Option<P>,

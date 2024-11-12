@@ -1,12 +1,17 @@
 pub mod infallible;
 
-use std::{borrow::Cow, ops::RangeBounds};
+use std::{
+    borrow::Cow,
+    ops::{Bound, RangeBounds},
+};
 
 use database::Database;
 use infallible::RangeIter;
 use kv_store::{range::Range, store::prefix::range::PrefixRange};
 
-use super::gas::{errors::GasStoreErrors, range::GasRange};
+use gas::store::{errors::GasStoreErrors, range::GasRange};
+
+pub type VectoredStoreRange<'a, DB> = StoreRange<'a, DB, Vec<u8>, (Bound<Vec<u8>>, Bound<Vec<u8>>)>;
 
 #[derive(Debug)]
 enum StoreRangeBackend<'a, DB, RB, R> {

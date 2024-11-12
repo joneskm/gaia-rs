@@ -1,9 +1,7 @@
 use super::*;
 use anyhow::anyhow;
 use gears::{
-    core::Protobuf,
-    extensions::corruption::UnwrapCorrupt,
-    types::{base::coins::UnsignedCoins, store::gas::errors::GasStoreErrors},
+    core::Protobuf, extensions::corruption::UnwrapCorrupt, types::base::coins::UnsignedCoins,
     x::types::validator::BondStatus,
 };
 

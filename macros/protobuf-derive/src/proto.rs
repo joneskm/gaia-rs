@@ -44,8 +44,7 @@ pub fn expand_raw_existing(input: DeriveInput) -> syn::Result<proc_macro2::Token
     let raw = match raw {
         Some(raw) => quote! { #raw },
         None => {
-            let new_name =
-                syn::Ident::new(&format!("Raw{}", ident), proc_macro2::Span::call_site());
+            let new_name = syn::Ident::new(&format!("Raw{ident}"), proc_macro2::Span::call_site());
 
             quote! { #new_name }
         }
@@ -82,7 +81,7 @@ pub fn expand_raw_existing(input: DeriveInput) -> syn::Result<proc_macro2::Token
                     opt.kind(),
                     (from, from_ref),
                     (into, into_ref),
-                ))
+                ));
             }
 
             let from_fields_iter_gen = {

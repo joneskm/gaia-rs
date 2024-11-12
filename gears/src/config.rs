@@ -66,10 +66,9 @@ impl<AC: ApplicationConfig> Config<AC> {
             .register_template_string("config", CONFIG_TEMPLATE)
             .expect("hard coded config template is valid");
 
-        let cfg: Config<AC> = {
-            let mut cfg = Config::default();
-            cfg.min_gas_prices = Some(MinGasPrices::default());
-            cfg
+        let cfg: Config<AC> = Config {
+            min_gas_prices: Some(MinGasPrices::default()),
+            ..Default::default()
         };
 
         let config = handlebars

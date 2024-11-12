@@ -1,11 +1,11 @@
 use crate::{
     context::{QueryableContext, TransactionalContext},
-    types::store::gas::errors::GasStoreErrors,
     x::module::Module,
 };
 use address::ConsAddress;
 use cosmwasm_std::Decimal256;
 use database::Database;
+use gas::store::errors::GasStoreErrors;
 use kv_store::StoreKey;
 use tendermint::types::{proto::crypto::PublicKey, time::timestamp::Timestamp};
 

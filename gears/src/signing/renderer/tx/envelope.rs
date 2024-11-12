@@ -23,6 +23,7 @@ use tendermint::types::chain_id::ChainId;
 /// Envelope is an internal data structure used to generate the tx envelope
 /// screens. Used in the same way as the Cosmos SDK Envelope type:
 /// https://github.com/cosmos/cosmos-sdk/blob/main/x/tx/signing/textual/tx.go
+#[derive(Debug)]
 pub struct Envelope<M> {
     chain_id: ChainId,
     account_number: u64,

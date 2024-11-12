@@ -1,3 +1,5 @@
+//! Key value stores
+
 pub mod application;
 pub mod transaction;
 

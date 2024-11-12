@@ -39,7 +39,7 @@ impl QueryRequest for AuthNodeQueryRequest {
     }
 }
 
-#[derive(Clone, Serialize, Query)]
+#[derive(Clone, Debug, Serialize, Query)]
 #[query(response)]
 #[serde(untagged)]
 pub enum AuthNodeQueryResponse {

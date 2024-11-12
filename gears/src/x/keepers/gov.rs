@@ -1,12 +1,10 @@
 use database::Database;
+use gas::store::errors::GasStoreErrors;
 use kv_store::StoreKey;
 
 use crate::{
     context::QueryableContext,
-    types::{
-        address::AccAddress, base::coin::UnsignedCoin, denom::Denom,
-        store::gas::errors::GasStoreErrors,
-    },
+    types::{address::AccAddress, base::coin::UnsignedCoin, denom::Denom},
     x::module::Module,
 };
 
